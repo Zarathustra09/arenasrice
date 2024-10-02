@@ -2,12 +2,14 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Product;
 use Illuminate\Http\Request;
 
 class LandingPageController extends Controller
 {
-    public function  index()
+    public function index()
     {
-        return view('welcome');
+        $products = Product::all();
+        return view('welcome', compact('products'));
     }
 }
