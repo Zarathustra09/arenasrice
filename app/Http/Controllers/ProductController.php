@@ -16,7 +16,17 @@ class ProductController extends Controller
 
     public function dataTable()
     {
-        $products = Product::with('category')->get();
+        $search = request()->input('search.value');
+        $products = Product::with('category')
+            ->when($search, function ($query, $search) {
+                return $query->where('name', 'like', "%{$search}%")
+                    ->orWhere('description', 'like', "%{$search}%")
+                    ->orWhereHas('category', function ($query) use ($search) {
+                        $query->where('name', 'like', "%{$search}%");
+                    });
+            })
+            ->get();
+
         return response()->json([
             'draw' => intval(request()->input('draw')),
             'recordsTotal' => $products->count(),
@@ -24,7 +34,6 @@ class ProductController extends Controller
             'data' => $products
         ]);
     }
-
     public function store(Request $request)
     {
         $request->validate([

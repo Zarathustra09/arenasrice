@@ -14,10 +14,15 @@ class CategoryController extends Controller
 
     public function dataTable()
     {
-        $categories = Category::all();
+        $search = request()->input('search.value');
+        $categories = Category::when($search, function ($query, $search) {
+            return $query->where('name', 'like', "%{$search}%")
+                ->orWhere('description', 'like', "%{$search}%");
+        })->get();
+
         return response()->json([
             'draw' => intval(request()->input('draw')),
-            'recordsTotal' => $categories->count(),
+            'recordsTotal' => Category::count(),
             'recordsFiltered' => $categories->count(),
             'data' => $categories
         ]);

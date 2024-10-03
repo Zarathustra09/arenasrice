@@ -11,8 +11,8 @@ class ShopController extends Controller
     public function index()
     {
         $categories = Category::all();
-        $products = Product::with('category')->paginate(9);
-        return view('guest.shop', compact('categories', 'products'));
+        $products = Product::with('category')->paginate(10);
+        return view('guest.shop.index', compact('categories', 'products'));
     }
 
     public function filter(Request $request)

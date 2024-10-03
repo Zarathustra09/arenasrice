@@ -51,7 +51,25 @@
 <script src="{{ asset('lib/waypoints/waypoints.min.js') }}"></script>
 <script src="{{ asset('lib/lightbox/js/lightbox.min.js') }}"></script>
 <script src="{{ asset('lib/owlcarousel/owl.carousel.min.js') }}"></script>
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+<script>
+    @if(session('success'))
+    Swal.fire({
+        icon: 'success',
+        title: 'Success',
+        text: '{{ session('success') }}',
+    });
+    @endif
 
+    @if(session('error'))
+    Swal.fire({
+        icon: 'info',
+        title: 'Login',
+        text: '{{ session('error') }}',
+    });
+    @endif
+</script>
+@stack('scripts')
 <!-- Template Javascript -->
 <script src="{{ asset('js/main.js') }}"></script>
 

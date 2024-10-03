@@ -76,13 +76,14 @@
                         searchable: false,
                         render: function(data, type, row) {
                             return `
-                                <a href="#" class="btn btn-primary btn-sm editProductBtn" data-id="${data}">Edit</a>
-                                <a href="#" class="btn btn-danger btn-sm deleteProductBtn" data-id="${data}">Delete</a>
-                            `;
+                        <a href="#" class="btn btn-primary btn-sm editProductBtn" data-id="${data}">Edit</a>
+                        <a href="#" class="btn btn-danger btn-sm deleteProductBtn" data-id="${data}">Delete</a>
+                    `;
                         }
                     }
                 ]
             });
+
 
             // Add Product
             $('#addProductBtn').on('click', function() {

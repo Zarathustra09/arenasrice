@@ -34,27 +34,29 @@
 @push('scripts')
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <script>
-        $('#dataTable').DataTable({
-            processing: true,
-            serverSide: true,
-            ajax: '{{ route('categories.data') }}',
-            columns: [
-                { data: 'id', name: 'id' },
-                { data: 'name', name: 'name' },
-                { data: 'description', name: 'description' },
-                {
-                    data: 'id',
-                    name: 'actions',
-                    orderable: false,
-                    searchable: false,
-                    render: function(data, type, row) {
-                        return `
-                    <a href="#" class="btn btn-primary btn-sm editCategoryBtn" data-id="${data}">Edit</a>
-                    <a href="#" class="btn btn-danger btn-sm deleteCategoryBtn" data-id="${data}">Delete</a>
-                `;
+        $(document).ready(function() {
+            $('#dataTable').DataTable({
+                processing: true,
+                serverSide: true,
+                ajax: '{{ route('categories.data') }}',
+                columns: [
+                    { data: 'id', name: 'id' },
+                    { data: 'name', name: 'name' },
+                    { data: 'description', name: 'description' },
+                    {
+                        data: 'id',
+                        name: 'actions',
+                        orderable: false,
+                        searchable: false,
+                        render: function(data, type, row) {
+                            return `
+                        <a href="#" class="btn btn-primary btn-sm editCategoryBtn" data-id="${data}">Edit</a>
+                        <a href="#" class="btn btn-danger btn-sm deleteCategoryBtn" data-id="${data}">Delete</a>
+                    `;
+                        }
                     }
-                }
-            ]
+                ]
+            });
         });
 
             // Add Category

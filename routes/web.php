@@ -1,8 +1,12 @@
 <?php
 
+use App\Http\Controllers\CartController;
 use App\Http\Controllers\CategoryController;
+use App\Http\Controllers\ContactController;
 use App\Http\Controllers\LandingPageController;
 use App\Http\Controllers\ProductController;
+use App\Http\Controllers\ShopController;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -38,3 +42,16 @@ Route::post('admin/categories', [CategoryController::class, 'store'])->name('cat
 Route::get('admin/categories/{id}/edit', [CategoryController::class, 'edit'])->name('categories.edit');
 Route::put('admin/categories/{id}', [CategoryController::class, 'update'])->name('categories.update');
 Route::delete('admin/categories/{id}', [CategoryController::class, 'destroy'])->name('categories.destroy');
+
+
+Route::get('guest/shop/index', [ShopController::class, 'index'])->name('shop.index');
+
+
+Route::get('guest/cart/index', [CartController::class, 'index'])->name('cart.index');
+Route::post('guest/cart/store', [CartController::class, 'add'])->name('cart.store');
+Route::delete('guest/cart/{id}', [CartController::class, 'destroy'])->name('cart.destroy');
+Route::patch('guest/cart/{id}/increase', [CartController::class, 'increaseQuantity'])->name('cart.increase');
+Route::patch('guest/cart/{id}/decrease', [CartController::class, 'decreaseQuantity'])->name('cart.decrease');
+
+
+Route::get('guest/contact/index', [ContactController::class, 'index'])->name('contact.index');
