@@ -64,7 +64,7 @@
     @if(session('error'))
     Swal.fire({
         icon: 'info',
-        title: 'Login',
+        title: 'Error',
         text: '{{ session('error') }}',
     });
     @endif

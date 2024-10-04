@@ -50,18 +50,18 @@
     </div>
 
     <!-- Nav Item - Orders -->
-    <li class="nav-item {{ Request::routeIs('orders.index') ? 'active' : '' }}">
-        <a class="nav-link" href="">
+    <li class="nav-item {{ Request::routeIs('admin.order.index') ? 'active' : '' }}">
+        <a class="nav-link" href="{{route('admin.order.index')}}">
             <i class="fas fa-fw fa-shopping-cart"></i>
             <span>Orders</span></a>
     </li>
 
     <!-- Nav Item - Payments -->
-    <li class="nav-item {{ Request::routeIs('payments.index') ? 'active' : '' }}">
-        <a class="nav-link" href="">
-            <i class="fas fa-fw fa-credit-card"></i>
-            <span>Payments</span></a>
-    </li>
+{{--    <li class="nav-item {{ Request::routeIs('payments.index') ? 'active' : '' }}">--}}
+{{--        <a class="nav-link" href="">--}}
+{{--            <i class="fas fa-fw fa-credit-card"></i>--}}
+{{--            <span>Payments</span></a>--}}
+{{--    </li>--}}
 
     <!-- Divider -->
     <hr class="sidebar-divider d-none d-md-block">

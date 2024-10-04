@@ -1,9 +1,11 @@
 <?php
 
+use App\Http\Controllers\AdminOrderController;
 use App\Http\Controllers\CartController;
 use App\Http\Controllers\CategoryController;
 use App\Http\Controllers\ContactController;
 use App\Http\Controllers\LandingPageController;
+use App\Http\Controllers\OrderController;
 use App\Http\Controllers\ProductController;
 use App\Http\Controllers\ShopController;
 use Illuminate\Support\Facades\Auth;
@@ -46,12 +48,20 @@ Route::delete('admin/categories/{id}', [CategoryController::class, 'destroy'])->
 
 Route::get('guest/shop/index', [ShopController::class, 'index'])->name('shop.index');
 
+Route::get('guest/contact/index', [ContactController::class, 'index'])->name('contact.index');
 
 Route::get('guest/cart/index', [CartController::class, 'index'])->name('cart.index');
 Route::post('guest/cart/store', [CartController::class, 'add'])->name('cart.store');
 Route::delete('guest/cart/{id}', [CartController::class, 'destroy'])->name('cart.destroy');
 Route::patch('guest/cart/{id}/increase', [CartController::class, 'increaseQuantity'])->name('cart.increase');
 Route::patch('guest/cart/{id}/decrease', [CartController::class, 'decreaseQuantity'])->name('cart.decrease');
+Route::post('guest/cart/checkout', [OrderController::class, 'checkout'])->name('cart.checkout');
+
+Route::get('guest/order/index', [OrderController::class, 'index'])->name('order.index');
 
 
-Route::get('guest/contact/index', [ContactController::class, 'index'])->name('contact.index');
+
+//admin orders
+Route::get('admin/order/index', [AdminOrderController::class, 'index'])->name('admin.order.index');
+Route::get('admin/order/data', [AdminOrderController::class, 'dataTable'])->name('admin.order.data');
+Route::put('admin/orders/{id}', [AdminOrderController::class, 'update'])->name('admin.orders.update');

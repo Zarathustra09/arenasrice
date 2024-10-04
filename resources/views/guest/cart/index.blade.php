@@ -88,9 +88,12 @@
                         </div>
                         <div class="py-4 mb-4 border-top border-bottom d-flex justify-content-between">
                             <h5 class="mb-0 ps-4 me-4">Total</h5>
-                            <p class="mb-0 pe-4" id="total" data-price="{{ $cartItems->sum(fn($item) => $item->product->price * $item->quantity) + 3 }}">₱{{ $cartItems->sum(fn($item) => $item->product->price * $item->quantity) + 3 }}</p>
+                            <p class="mb-0 pe-4" id="total" data-price="{{ $cartItems->sum(fn($item) => $item->product->price * $item->quantity) }}">₱{{ $cartItems->sum(fn($item) => $item->product->price * $item->quantity) }}</p>
                         </div>
-                        <button class="btn border-secondary rounded-pill px-4 py-3 text-primary text-uppercase mb-4 ms-4" type="button">Proceed Checkout</button>
+                        <form action="{{ route('cart.checkout') }}" method="POST">
+                            @csrf
+                            <button class="btn border-secondary rounded-pill px-4 py-3 text-primary text-uppercase mb-4 ms-4" type="submit">Proceed Checkout</button>
+                        </form>
                     </div>
                 </div>
             </div>
@@ -128,7 +131,7 @@
                         });
 
                         $('#subtotal').text(`₱${subtotal.toFixed(2)}`);
-                        $('#total').text(`₱${(subtotal + 3).toFixed(2)}`);
+                        $('#total').text(`₱${subtotal.toFixed(2)}`);
                     }
                 }
             });
