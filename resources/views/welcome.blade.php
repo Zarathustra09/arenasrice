@@ -138,7 +138,7 @@
                                                         <form action="{{ route('cart.store') }}" method="POST">
                                                             @csrf
                                                             <input type="hidden" name="product_id" value="{{ $product->id }}">
-                                                            <input type="number" name="quantity" value="1" min="1" class="form-control mb-2" style="width: 60px;">
+                                                            <input type="number" name="quantity" value="1" min="1" max="{{$product->stock}}" class="form-control mb-2" style="width: 60px;">
                                                             <p class="mb-2">Stock: {{ $product->stock }}</p>
                                                             <button type="submit" class="btn border border-secondary rounded-pill px-3 text-primary">
                                                                 <i class="fa fa-shopping-bag me-2 text-primary"></i> Add to cart

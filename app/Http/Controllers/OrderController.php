@@ -55,4 +55,10 @@ class OrderController extends Controller
 
         return redirect()->route('cart.index')->with('success', 'Order placed successfully!');
     }
+
+    public function orederListIndex()
+    {
+        $orders = Order::where('user_id', Auth::id())->with('orderItems.product')->get();
+        return view('guest.order.list', compact('orders'));
+    }
 }

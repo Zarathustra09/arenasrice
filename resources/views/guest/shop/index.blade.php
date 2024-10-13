@@ -1,7 +1,5 @@
 @extends('layouts.guest-app')
 
-
-
 @section('content')
 
     <div class="container-fluid page-header py-5">
@@ -13,9 +11,9 @@
     </div>
     <div class="container-fluid fruite py-5">
         <div class="container py-5">
-            <h1 class="mb-4">Fresh fruits shop</h1>
+            <h1 class="mb-4">Fresh Rice Shop</h1>
             <div class="row g-4">
-                <div class="col-lg-12">
+                <div class="col-12">
                     <div class="row g-4">
                         <div class="col-xl-3">
                             <div class="input-group w-100 mx-auto d-flex">
@@ -26,10 +24,10 @@
                         <div class="col-6"></div>
                     </div>
                     <div class="row g-4">
-                        <div class="col-lg-9">
+                        <div class="col-12">
                             <div class="row g-4 justify-content-center">
                                 @foreach($products as $product)
-                                    <div class="col-md-4">
+                                    <div class="col-md-3">
                                         <div class="card mb-4">
                                             <img src="{{ Storage::url($product->image) }}" class="card-img-top" alt="{{ $product->name }}">
                                             <div class="card-body">
@@ -39,7 +37,7 @@
                                                 <form action="{{ route('cart.store') }}" method="POST">
                                                     @csrf
                                                     <input type="hidden" name="product_id" value="{{ $product->id }}">
-                                                    <input type="number" name="quantity" value="1" min="1" class="form-control mb-2" style="width: 60px;">
+                                                    <input type="number" name="quantity" value="1" min="1" max="{{$product->stock}}" class="form-control mb-2" style="width: 60px;">
                                                     <p class="mb-2">Stock: {{ $product->stock }}</p>
                                                     <button type="submit" class="btn border border-secondary rounded-pill px-3 text-primary">
                                                         <i class="fa fa-shopping-bag me-2 text-primary"></i> Add to cart

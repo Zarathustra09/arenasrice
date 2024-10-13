@@ -51,7 +51,7 @@
                             </a>
                             <ul class="dropdown-menu">
                                 <li>
-                                    <a class="dropdown-item" href="">
+                                    <a class="dropdown-item" href="{{route('order.list')}}">
                                         Orders
                                     </a>
                                 </li>
