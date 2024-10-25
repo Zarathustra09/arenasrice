@@ -3,6 +3,8 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
+use App\Models\Product;
+use App\Models\OrderItem;
 
 class HomeController extends Controller
 {
@@ -23,6 +25,11 @@ class HomeController extends Controller
      */
     public function index()
     {
-        return view('home');
+        $products = Product::withCount('orderItems')
+            ->orderBy('order_items_count', 'desc')
+            ->take(10)
+            ->get();
+
+        return view('home', compact('products'));
     }
 }

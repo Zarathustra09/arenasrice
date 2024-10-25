@@ -33,12 +33,8 @@
                                     <img src="{{ Storage::url($item->product->image) }}" class="img-fluid me-5 rounded-circle" style="width: 80px; height: 80px;" alt="{{ $item->product->name }}">
                                 </div>
                             </th>
-                            <td>
-                                <p class="mb-0 mt-4">{{ $item->product->name }}</p>
-                            </td>
-                            <td>
-                                <p class="mb-0 mt-4">₱{{ $item->product->price }}</p>
-                            </td>
+                            <td><p class="mb-0 mt-4">{{ $item->product->name }}</p></td>
+                            <td><p class="mb-0 mt-4">₱{{ $item->product->price }}</p></td>
                             <td>
                                 <div class="input-group quantity mt-4" style="width: 100px;">
                                     <div class="input-group-btn">
@@ -54,9 +50,7 @@
                                     </div>
                                 </div>
                             </td>
-                            <td>
-                                <p class="mb-0 mt-4" id="total-{{ $item->id }}" data-price="{{ $item->product->price }}">₱{{ $item->product->price * $item->quantity }}</p>
-                            </td>
+                            <td><p class="mb-0 mt-4" id="total-{{ $item->id }}" data-price="{{ $item->product->price }}">₱{{ $item->product->price * $item->quantity }}</p></td>
                             <td>
                                 <form action="{{ route('cart.destroy', $item->id) }}" method="POST" class="mt-4">
                                     @csrf
@@ -92,6 +86,33 @@
                         </div>
                         <form action="{{ route('cart.checkout') }}" method="POST">
                             @csrf
+                            <div class="px-4 mb-4">
+                                <h5>Billing Address</h5>
+                                <div class="mb-3">
+                                    <input type="text" name="billing_name" class="form-control" placeholder="Full Name" required>
+                                </div>
+                                <div class="mb-3">
+                                    <input type="text" name="billing_address" class="form-control" placeholder="Address" required>
+                                </div>
+                                <div class="mb-3">
+                                    <input type="text" name="billing_city" class="form-control" placeholder="City" required>
+                                </div>
+                                <div class="mb-3">
+                                    <input type="text" name="billing_state" class="form-control" placeholder="State/Province" required>
+                                </div>
+                                <div class="mb-3">
+                                    <input type="text" name="billing_zip" class="form-control" placeholder="Postal Code" required>
+                                </div>
+                                <div class="mb-3">
+                                    <input type="text" name="billing_country" class="form-control" placeholder="Country" required>
+                                </div>
+                                <div class="mb-3">
+                                    <input type="tel" name="billing_phone" class="form-control" placeholder="Phone Number" required>
+                                </div>
+                                <div class="mb-3">
+                                    <input type="email" name="billing_email" class="form-control" placeholder="Email Address" required>
+                                </div>
+                            </div>
                             <button class="btn border-secondary rounded-pill px-4 py-3 text-primary text-uppercase mb-4 ms-4" type="submit">Proceed Checkout</button>
                         </form>
                     </div>
@@ -101,7 +122,6 @@
     </div>
     <!-- Cart Page End -->
 @endsection
-
 @push('scripts')
     <script>
         function updateQuantity(id, action) {
