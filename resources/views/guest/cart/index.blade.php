@@ -104,9 +104,6 @@
                                     <input type="text" name="billing_zip" class="form-control" placeholder="Postal Code" required>
                                 </div>
                                 <div class="mb-3">
-                                    <input type="text" name="billing_country" class="form-control" placeholder="Country" required>
-                                </div>
-                                <div class="mb-3">
                                     <input type="tel" name="billing_phone" class="form-control" placeholder="Phone Number" required>
                                 </div>
                                 <div class="mb-3">
