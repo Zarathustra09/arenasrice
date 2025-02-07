@@ -6,7 +6,7 @@
         <div class="sidebar-brand-icon rotate-n-15">
             <i class="fas fa-utensils"></i>
         </div>
-        <div class="sidebar-brand-text mx-3">Arenas Rice<sup></sup></div>
+        <div class="sidebar-brand-text mx-3">Cakify<sup></sup></div>
     </a>
 
     <!-- Divider -->
