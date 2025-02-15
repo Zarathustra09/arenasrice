@@ -9,8 +9,9 @@
     <div class="container topbar bg-primary d-none d-lg-block">
         <div class="d-flex justify-content-between">
             <div class="top-info ps-2">
-                <small class="me-3"><i class="fas fa-map-marker-alt me-2 text-secondary"></i> <a href="#" class="text-white">Purok 1, Barangay Santiago , Santo Tomas, Philippines</a></small>
-                <small class="me-3"><i class="fas fa-envelope me-2 text-secondary"></i><a href="#" class="text-white">Email@Example.com</a></small>
+                <small class="me-3"><i class="fas fa-map-marker-alt me-2 text-secondary"></i> <a href="#" class="text-white">347F+Q44, Tanauan, Batangas</a></small>
+                <small class="me-3"><i class="fas fa-envelope me-2 text-secondary"></i><a href="#" class="text-white">
+                        terrenalkimlester@gmail.com</a></small>
             </div>
             <div class="top-link pe-2">
                 <a href="{{route('contact.index')}}" class="text-white"><small class="text-white mx-2">Contact Us</small></a>
@@ -22,7 +23,7 @@
     </div>
     <div class="container px-0">
         <nav class="navbar navbar-light bg-white navbar-expand-xl">
-            <a href="index.html" class="navbar-brand"><h1 class="text-primary display-6">Cakify</h1></a>
+            <a href="index.html" class="navbar-brand"><h1 class="text-primary display-6">{{env('APP_NAME')}}</h1></a>
             <button class="navbar-toggler py-2 px-3" type="button" data-bs-toggle="collapse" data-bs-target="#navbarCollapse">
                 <span class="fa fa-bars text-primary"></span>
             </button>

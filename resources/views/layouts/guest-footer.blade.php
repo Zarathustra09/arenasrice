@@ -5,7 +5,7 @@
             <div class="row g-4">
                 <div class="col-lg-3">
                     <a href="#">
-                        <h1 class="text-primary mb-0">Cakify</h1>
+                        <h1 class="text-primary mb-0">{{env('APP_NAME')}}</h1>
                         <p class="text-secondary mb-0">Premium Quality Cake</p>
                     </a>
                 </div>
@@ -58,8 +58,8 @@
             <div class="col-lg-3 col-md-6">
                 <div class="footer-item">
                     <h4 class="text-light mb-3">Contact</h4>
-                    <p>Address: Purok 1, Barangay Santiago , Santo Tomas, Philippines</p>
-                    <p>Email: Example@gmail.com</p>
+                    <p>Address: 347F+Q44, Tanauan, Batangas</p>
+                    <p>Email: terrenalkimlester@gmail.com</p>
                     <p>Phone: 0968 772 6503</p>
                     <p>Payment Accepted</p>
                     <img src="{{asset('img/payment.png')}}" class="img-fluid" alt="Payment Methods">
@@ -75,7 +75,7 @@
     <div class="container">
         <div class="row">
             <div class="col-md-6 text-center text-md-start mb-3 mb-md-0">
-                <span class="text-light"><a href="#"><i class="fas fa-copyright text-light me-2"></i>Cakify</a>, All rights reserved.</span>
+                <span class="text-light"><a href="#"><i class="fas fa-copyright text-light me-2"></i>{{env('APP_NAME')}}</a>, All rights reserved.</span>
             </div>
         </div>
     </div>

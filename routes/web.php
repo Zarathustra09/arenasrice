@@ -58,6 +58,8 @@ Route::group(['middleware' => ['auth', 'role:1']], function () {
     Route::get('/profile', [ProfileController::class, 'index'])->name('profile.index');
     Route::post('/profile', [ProfileController::class, 'update'])->name('profile.update');
 
+
+
 });
 
 
@@ -76,3 +78,5 @@ Route::get('guest/order/index', [OrderController::class, 'index'])->name('order.
 Route::get('guest/order/list', [OrderController::class, 'orederListIndex'])->name('order.list');
 
 
+Route::get('/guest/profile', [ProfileController::class, 'guestIndex'])->name('guest.profile.index');
+Route::post('/guest/profile', [ProfileController::class, 'guestUpdate'])->name('guest.profile.update');
