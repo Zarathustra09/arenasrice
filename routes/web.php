@@ -7,6 +7,7 @@ use App\Http\Controllers\ContactController;
 use App\Http\Controllers\LandingPageController;
 use App\Http\Controllers\OrderController;
 use App\Http\Controllers\ProductController;
+use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\ShopController;
 use App\Http\Middleware\RoleMiddleware;
 use Illuminate\Support\Facades\Auth;
@@ -53,6 +54,9 @@ Route::group(['middleware' => ['auth', 'role:1']], function () {
     Route::get('admin/order/index', [AdminOrderController::class, 'index'])->name('admin.order.index');
     Route::get('admin/order/data', [AdminOrderController::class, 'dataTable'])->name('admin.order.data');
     Route::put('admin/orders/{id}', [AdminOrderController::class, 'update'])->name('admin.orders.update');
+
+    Route::get('/profile', [ProfileController::class, 'index'])->name('profile.index');
+    Route::post('/profile', [ProfileController::class, 'update'])->name('profile.update');
 
 });
 
