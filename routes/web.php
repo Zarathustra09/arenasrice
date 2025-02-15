@@ -4,7 +4,9 @@ use App\Http\Controllers\AdminOrderController;
 use App\Http\Controllers\CartController;
 use App\Http\Controllers\CategoryController;
 use App\Http\Controllers\ContactController;
+use App\Http\Controllers\IngredientController;
 use App\Http\Controllers\LandingPageController;
+use App\Http\Controllers\LogController;
 use App\Http\Controllers\OrderController;
 use App\Http\Controllers\ProductController;
 use App\Http\Controllers\ProfileController;
@@ -60,6 +62,14 @@ Route::group(['middleware' => ['auth', 'role:1']], function () {
 
 
 
+    Route::get('/admin/ingredients', [IngredientController::class, 'index'])->name('ingredients.index');
+    Route::get('/admin/ingredients/data', [IngredientController::class, 'dataTable'])->name('ingredients.data');
+    Route::post('/admin/ingredients', [IngredientController::class, 'store'])->name('ingredients.store');
+    Route::get('/admin/ingredients/{id}', [IngredientController::class, 'show'])->name('ingredients.show');
+    Route::put('/admin/ingredients/{id}', [IngredientController::class, 'update'])->name('ingredients.update');
+    Route::delete('/admin/ingredients/{id}', [IngredientController::class, 'destroy'])->name('ingredients.destroy');
+
+    Route::get('/admin/logs', [LogController::class, 'index'])->name('admin.logs.index');
 });
 
 

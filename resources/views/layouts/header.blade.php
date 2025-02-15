@@ -24,7 +24,7 @@
 
     <!-- Heading -->
     <div class="sidebar-heading">
-        Interface
+        Resource Management
     </div>
 
     <!-- Nav Item - Products -->
@@ -34,16 +34,32 @@
             <span>Products</span></a>
     </li>
 
+    <li class="nav-item {{ Request::routeIs('ingredients.index') ? 'active' : '' }}">
+        <a class="nav-link" href="{{ route('ingredients.index') }}">
+            <i class="fas fa-fw fa-box"></i>
+            <span>Ingredients</span></a>
+    </li>
+
     <!-- Nav Item - Categories -->
     <li class="nav-item {{ Request::routeIs('categories.index') ? 'active' : '' }}">
         <a class="nav-link" href="{{ route('categories.index') }}">
             <i class="fas fa-fw fa-tags"></i>
-            <span>Categories</span></a>
+            <span>Product Category</span></a>
     </li>
 
     <!-- Divider -->
     <hr class="sidebar-divider">
 
+    <div class="sidebar-heading">
+        Logs
+    </div>
+
+    <li class="nav-item {{ Request::routeIs('admin.logs.index') ? 'active' : '' }}">
+        <a class="nav-link" href="{{ route('admin.logs.index') }}">
+            <i class="fas fa-fw fa-tags"></i>
+            <span>Logs</span></a>
+    </li>
+    <hr class="sidebar-divider">
     <!-- Heading -->
     <div class="sidebar-heading">
         Sales
