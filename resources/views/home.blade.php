@@ -1,18 +1,17 @@
 @extends('layouts.app')
 
 @section('content')
-    <div class="container">
-        <div class="row justify-content-center">
-            <div class="col-md-8">
-                <div class="card shadow mb-4">
-                    <div class="card-header py-3">
-                        <h6 class="m-0 font-weight-bold text-primary">Most Bought Products</h6>
+    <div class="container-fluid px-4">
+        <div class="row">
+            <div class="col-12 col-lg-10 col-xl-8 mx-auto">
+                <div class="card shadow-sm rounded-3 mb-4">
+                    <div class="card-header bg-white py-3 d-flex justify-content-between align-items-center">
+                        <h5 class="mb-0 text-primary fw-bold">Most Bought Products</h5>
                     </div>
                     <div class="card-body">
-                        <div class="chart-bar">
+                        <div class="chart-container" style="position: relative; height:60vh; width:100%">
                             <canvas id="mostBoughtProductsChart"></canvas>
                         </div>
-                        <hr>
                     </div>
                 </div>
             </div>
@@ -40,6 +39,8 @@
                     }]
                 },
                 options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
                     scales: {
                         y: {
                             beginAtZero: true
