@@ -9,7 +9,18 @@ class Order extends Model
 {
     use HasFactory;
 
-    protected $fillable = ['user_id', 'total_amount', 'status'];
+    protected $fillable = [
+        'user_id',
+        'total_amount',
+        'status',
+        'billing_name',
+        'billing_address',
+        'billing_city',
+        'billing_state',
+        'billing_zip',
+        'billing_phone',
+        'billing_email'
+    ];
 
     // Relationship: An order belongs to a user
     public function user()

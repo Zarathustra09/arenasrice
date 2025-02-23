@@ -16,10 +16,15 @@ return new class extends Migration
             $table->foreignId('user_id')->constrained()->onDelete('cascade'); // Link to users table
             $table->decimal('total_amount', 10, 2);
             $table->enum('status', ['pending', 'processing', 'shipped', 'delivered', 'canceled'])->default('pending');
+            $table->string('billing_name');
+            $table->string('billing_address');
+            $table->string('billing_city');
+            $table->string('billing_state');
+            $table->string('billing_zip');
+            $table->string('billing_phone');
+            $table->string('billing_email');
             $table->timestamps();
         });
-
-
     }
 
     /**
