@@ -87,7 +87,7 @@ Route::group(['middleware' => ['auth', 'role:1']], function () {
 
 Route::get('admin/orders/{id}/download', [OrderController::class, 'downloadOrder'])->name('admin.order.download');
 //products
-
+Route::post('guest/contact/send', [ContactController::class, 'send'])->name('contact.send');
 Route::get('guest/shop/index', [ShopController::class, 'index'])->name('shop.index');
 Route::get('guest/contact/index', [ContactController::class, 'index'])->name('contact.index');
 Route::get('guest/cart/index', [CartController::class, 'index'])->name('cart.index');
