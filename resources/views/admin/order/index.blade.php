@@ -56,11 +56,14 @@
                         }},
                     { data: 'status', name: 'status' },
                     { data: 'id', name: 'actions', orderable: false, searchable: false, render: function(data, type, row) {
+                            let buttons = '';
                             if (row.status === 'canceled') {
-                                return `<button class="btn btn-secondary btn-sm" disabled>Cancelled</button>`;
+                                buttons += `<button class="btn btn-secondary btn-sm" disabled>Cancelled</button>`;
                             } else {
-                                return `<a href="#" class="btn btn-primary btn-sm editOrderBtn" data-id="${data}">Edit</a>`;
+                                buttons += `<a href="#" class="btn btn-primary btn-sm editOrderBtn" data-id="${data}">Edit</a>`;
                             }
+                            buttons += `<a href="{{ url('admin/orders') }}/${data}/download" class="btn btn-success btn-sm ms-2">Download</a>`;
+                            return buttons;
                         }}
                 ],
                 order: [[0, 'desc']],

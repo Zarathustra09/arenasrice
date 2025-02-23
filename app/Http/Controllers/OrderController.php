@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use Barryvdh\DomPDF\Facade\Pdf;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use App\Models\Order;
@@ -62,6 +63,14 @@ class OrderController extends Controller
 
         return redirect()->route('cart.index')->with('success', 'Order placed successfully!');
     }
+
+    public function downloadOrder($id)
+    {
+        $order = Order::with('orderItems.product')->findOrFail($id);
+        $pdf = Pdf::loadView('pdf.order', compact('order'));
+        return $pdf->download('order_' . $order->id . '.pdf');
+    }
+
 
     public function orederListIndex()
     {

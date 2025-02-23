@@ -27,6 +27,7 @@
                             <th>Quantity</th>
                             <th>Total</th>
                             <th>Status</th>
+                            <th>Actions</th>
                         </tr>
                         </thead>
                         <tbody>
@@ -55,6 +56,9 @@
                                 </td>
                                 <td>₱{{ $order->total_amount }}</td>
                                 <td>{{ $order->status }}</td>
+                                <td>
+                                    <a href="{{ route('admin.order.download', $order->id) }}" class="btn btn-success btn-sm">Download</a>
+                                </td>
                             </tr>
                         @endforeach
                         </tbody>

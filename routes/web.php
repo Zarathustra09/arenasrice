@@ -81,9 +81,11 @@ Route::group(['middleware' => ['auth', 'role:1']], function () {
     Route::delete('/admin/accounts/{id}', [AccountController::class, 'destroy']);
 
     Route::get('products/lowStockData', [HomeController::class, 'lowStockData'])->name('products.lowStockData');
+
+
 });
 
-
+Route::get('admin/orders/{id}/download', [OrderController::class, 'downloadOrder'])->name('admin.order.download');
 //products
 
 Route::get('guest/shop/index', [ShopController::class, 'index'])->name('shop.index');
