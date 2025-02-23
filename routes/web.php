@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\AccountController;
 use App\Http\Controllers\AdminOrderController;
 use App\Http\Controllers\CartController;
 use App\Http\Controllers\CategoryController;
@@ -72,7 +73,12 @@ Route::group(['middleware' => ['auth', 'role:1']], function () {
 
     Route::get('/admin/logs', [LogController::class, 'index'])->name('admin.logs.index');
 
-
+    Route::get('/admin/accounts', [AccountController::class, 'index'])->name('admin.accounts.index');
+    Route::get('/admin/accounts/data', [AccountController::class, 'data'])->name('admin.accounts.data');
+    Route::post('/admin/accounts', [AccountController::class, 'store'])->name('admin.accounts.store');
+    Route::get('/admin/accounts/{id}', [AccountController::class, 'show']);
+    Route::put('/admin/accounts/{id}', [AccountController::class, 'update']);
+    Route::delete('/admin/accounts/{id}', [AccountController::class, 'destroy']);
 
     Route::get('products/lowStockData', [HomeController::class, 'lowStockData'])->name('products.lowStockData');
 });
