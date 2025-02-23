@@ -71,6 +71,20 @@
                             </div>
 
                             <div class="row mb-3">
+                                <label for="password" class="col-md-4 col-form-label">Password</label>
+                                <div class="col-md-8">
+                                    <input type="password" id="password" name="password" class="form-control">
+                                </div>
+                            </div>
+
+                            <div class="row mb-3">
+                                <label for="password_confirmation" class="col-md-4 col-form-label">Confirm Password</label>
+                                <div class="col-md-8">
+                                    <input type="password" id="password_confirmation" name="password_confirmation" class="form-control">
+                                </div>
+                            </div>
+
+                            <div class="row mb-3">
                                 <label for="profilepicture" class="col-md-4 col-form-label">Profile Picture</label>
                                 <div class="col-md-8">
                                     <input type="file" id="profilepicture" name="profilepicture" class="form-control">

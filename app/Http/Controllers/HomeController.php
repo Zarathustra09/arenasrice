@@ -23,13 +23,31 @@ class HomeController extends Controller
      *
      * @return \Illuminate\Contracts\Support\Renderable
      */
-    public function index()
+    public function index(Request $request)
     {
-        $products = Product::withCount('orderItems')
-            ->orderBy('order_items_count', 'desc')
-            ->take(10)
-            ->get();
+        $query = Product::withCount(['orderItems' => function ($query) use ($request) {
+            if ($request->has('filter')) {
+                switch ($request->filter) {
+                    case 'today':
+                        $query->whereDate('created_at', today());
+                        break;
+                    case 'week':
+                        $query->whereBetween('created_at', [now()->startOfWeek(), now()->endOfWeek()]);
+                        break;
+                    case 'month':
+                        $query->whereMonth('created_at', now()->month);
+                        break;
+                    case 'custom':
+                        $query->whereBetween('created_at', [$request->start_date, $request->end_date]);
+                        break;
+                }
+            }
+        }]);
 
-        return view('home', compact('products'));
+        $products = $query->orderBy('order_items_count', 'desc')->take(10)->get();
+        $productNames = $products->pluck('name');
+        $orderCounts = $products->pluck('order_items_count');
+
+        return view('home', compact('products', 'productNames', 'orderCounts'));
     }
 }

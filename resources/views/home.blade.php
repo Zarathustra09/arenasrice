@@ -2,17 +2,30 @@
 
 @section('content')
     <div class="container-fluid px-4">
+        <div class="row mb-4">
+            <form method="GET" action="{{ route('home') }}" class="form-inline">
+                <select name="filter" class="form-control mr-2" onchange="toggleCustomDateFields(this.value)">
+                    <option value="">Select Filter</option>
+                    <option value="today">Today</option>
+                    <option value="week">This Week</option>
+                    <option value="month">This Month</option>
+                    <option value="custom">Custom</option>
+                </select>
+                <input type="date" name="start_date" id="start_date" class="form-control mr-2" style="display: none;">
+                <input type="date" name="end_date" id="end_date" class="form-control mr-2" style="display: none;">
+                <button type="submit" class="btn btn-primary">Filter</button>
+            </form>
+        </div>
         <div class="row">
-            <div class="col-12 col-lg-10 col-xl-8 mx-auto">
-                <div class="card shadow-sm rounded-3 mb-4">
-                    <div class="card-header bg-white py-3 d-flex justify-content-between align-items-center">
-                        <h5 class="mb-0 text-primary fw-bold">Most Bought Products</h5>
+            <div class="card shadow mb-4">
+                <div class="card-header py-3">
+                    <h6 class="m-0 font-weight-bold text-primary">Bar Chart</h6>
+                </div>
+                <div class="card-body">
+                    <div class="chart-bar">
+                        <canvas id="barchart"></canvas>
                     </div>
-                    <div class="card-body">
-                        <div class="chart-container" style="position: relative; height:60vh; width:100%">
-                            <canvas id="mostBoughtProductsChart"></canvas>
-                        </div>
-                    </div>
+                    <hr>
                 </div>
             </div>
         </div>
@@ -20,34 +33,97 @@
 
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <script>
-        document.addEventListener('DOMContentLoaded', function () {
-            var ctx = document.getElementById('mostBoughtProductsChart').getContext('2d');
-            var products = @json($products);
-            var productNames = products.map(product => product.name);
-            var productCounts = products.map(product => product.order_items_count);
+        function toggleCustomDateFields(value) {
+            if (value === 'custom') {
+                document.getElementById('start_date').style.display = 'inline-block';
+                document.getElementById('end_date').style.display = 'inline-block';
+            } else {
+                document.getElementById('start_date').style.display = 'none';
+                document.getElementById('end_date').style.display = 'none';
+            }
+        }
 
-            new Chart(ctx, {
-                type: 'bar',
-                data: {
-                    labels: productNames,
-                    datasets: [{
-                        label: 'Number of Orders',
-                        data: productCounts,
-                        backgroundColor: 'rgba(54, 162, 235, 0.2)',
-                        borderColor: 'rgba(54, 162, 235, 1)',
-                        borderWidth: 1
-                    }]
+        var productNames = @json($productNames);
+        var orderCounts = @json($orderCounts);
+
+        var ctx = document.getElementById("barchart").getContext('2d');
+        var myBarChart = new Chart(ctx, {
+            type: 'bar',
+            data: {
+                labels: productNames,
+                datasets: [{
+                    label: "Orders",
+                    backgroundColor: "#4e73df",
+                    hoverBackgroundColor: "#2e59d9",
+                    borderColor: "#4e73df",
+                    data: orderCounts,
+                }],
+            },
+            options: {
+                maintainAspectRatio: false,
+                layout: {
+                    padding: {
+                        left: 10,
+                        right: 25,
+                        top: 25,
+                        bottom: 0
+                    }
                 },
-                options: {
-                    responsive: true,
-                    maintainAspectRatio: false,
-                    scales: {
-                        y: {
-                            beginAtZero: true
+                scales: {
+                    x: {
+                        grid: {
+                            display: false,
+                            drawBorder: false
+                        },
+                        ticks: {
+                            maxTicksLimit: 10
+                        },
+                        maxBarThickness: 25,
+                    },
+                    y: {
+                        min: 0,
+                        max: Math.max(...orderCounts) + 5,
+                        ticks: {
+                            maxTicksLimit: 5,
+                            padding: 10,
+                        },
+                        grid: {
+                            color: "rgb(234, 236, 244)",
+                            zeroLineColor: "rgb(234, 236, 244)",
+                            drawBorder: false,
+                            borderDash: [2],
+                            zeroLineBorderDash: [2]
+                        }
+                    },
+                },
+                plugins: {
+                    legend: {
+                        display: false
+                    },
+                    tooltip: {
+                        titleMarginBottom: 10,
+                        titleFont: {
+                            size: 14,
+                            color: '#6e707e'
+                        },
+                        backgroundColor: "rgb(255,255,255)",
+                        bodyFont: {
+                            color: "#858796"
+                        },
+                        borderColor: '#dddfeb',
+                        borderWidth: 1,
+                        xPadding: 15,
+                        yPadding: 15,
+                        displayColors: false,
+                        caretPadding: 10,
+                        callbacks: {
+                            label: function (tooltipItem) {
+                                return tooltipItem.dataset.label + ': ' + tooltipItem.raw;
+                            }
                         }
                     }
                 }
-            });
+            }
         });
     </script>
 @endsection

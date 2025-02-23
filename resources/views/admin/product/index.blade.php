@@ -24,6 +24,7 @@
                         <th>Stock</th>
                         <th>Category</th>
                         <th>Image</th>
+                        <th>Status</th>
                         <th>Actions</th>
                     </tr>
                     </thead>
@@ -70,6 +71,21 @@
                         }
                     },
                     {
+                        data: 'stock',
+                        name: 'status',
+                        orderable: false,
+                        searchable: false,
+                        render: function(data, type, row) {
+                            if (data == 0) {
+                                return '<span class="badge bg-danger">No Stock</span>';
+                            } else if (data < 20) {
+                                return '<span class="badge bg-warning text-dark">Low Stock</span>';
+                            } else {
+                                return '<span class="badge bg-success">In Stock</span>';
+                            }
+                        }
+                    },
+                    {
                         data: 'id',
                         name: 'actions',
                         orderable: false,
@@ -83,6 +99,7 @@
                     }
                 ]
             });
+        });
 
 
             // Add Product
@@ -270,6 +287,5 @@
                     }
                 });
             });
-        });
     </script>
 @endpush

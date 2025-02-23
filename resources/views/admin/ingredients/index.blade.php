@@ -23,6 +23,7 @@
                         <th>Description</th>
                         <th>Stock</th>
                         <th>Image</th>
+                        <th>Status</th> <!-- New Status Column -->
                         <th>Actions</th>
                     </tr>
                     </thead>
@@ -65,6 +66,21 @@
                         searchable: false,
                         render: function(data, type, row) {
                             return `<img src="/storage/${data}" class="ingredient-image" style="width:50px" alt="Ingredient Image">`;
+                        }
+                    },
+                    {
+                        data: 'stock',
+                        name: 'status',
+                        orderable: false,
+                        searchable: false,
+                        render: function(data, type, row) {
+                            if (data == 0) {
+                                return '<span class="badge bg-danger">No Stock</span>';
+                            } else if (data < 20) {
+                                return '<span class="badge bg-warning text-dark">Low Stock</span>';
+                            } else {
+                                return '<span class="badge bg-success">In Stock</span>';
+                            }
                         }
                     },
                     {
