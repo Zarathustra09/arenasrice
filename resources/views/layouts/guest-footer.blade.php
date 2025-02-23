@@ -61,8 +61,8 @@
                     <p>Address: 347F+Q44, Tanauan, Batangas</p>
                     <p>Email: terrenalkimlester@gmail.com</p>
                     <p>Phone: 0968 772 6503</p>
-                    <p>Payment Accepted</p>
-                    <img src="{{asset('img/payment.png')}}" class="img-fluid" alt="Payment Methods">
+{{--                    <p>Payment Accepted</p>--}}
+{{--                    <img src="{{asset('img/payment.png')}}" class="img-fluid" alt="Payment Methods">--}}
                 </div>
             </div>
         </div>
