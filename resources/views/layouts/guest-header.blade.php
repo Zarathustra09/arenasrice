@@ -56,6 +56,12 @@
                                         Orders
                                     </a>
                                 </li>
+
+                                <li>
+                                    <a class="dropdown-item" href="{{route('guest.profile.index')}}">
+                                        Profile
+                                    </a>
+                                </li>
                                 <li>
                                     <form id="logout-form" action="{{ route('logout') }}" method="POST" style="display: none;">
                                         @csrf
