@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Storage;
 use App\Models\User;
 use Illuminate\Support\Str;
@@ -44,6 +45,10 @@ class ProfileController extends Controller
         $user->email = $request->email;
 
         if ($request->filled('password')) {
+            // Log the former and new password
+            Log::info('Former Password: ' . $user->password);
+            Log::info('New Password: ' . $request->password);
+
             $user->password = Hash::make($request->password);
             $user->setRememberToken(Str::random(60));
         }
@@ -75,6 +80,10 @@ class ProfileController extends Controller
         $user->email = $request->email;
 
         if ($request->filled('password')) {
+            // Log the former and new password
+            Log::info('Former Password: ' . $user->password);
+            Log::info('New Password: ' . $request->password);
+
             $user->password = Hash::make($request->password);
         }
 

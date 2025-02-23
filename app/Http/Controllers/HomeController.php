@@ -47,7 +47,16 @@ class HomeController extends Controller
         $products = $query->orderBy('order_items_count', 'desc')->take(10)->get();
         $productNames = $products->pluck('name');
         $orderCounts = $products->pluck('order_items_count');
+        $lowStockProducts = Product::where('stock', '<', 20)->get();
 
-        return view('home', compact('products', 'productNames', 'orderCounts'));
+        return view('home', compact('products', 'productNames', 'orderCounts', 'lowStockProducts'));
+    }
+
+
+    public function lowStockData()
+    {
+        $products = Product::where('stock', '<', 20)->get();
+
+        return response()->json($products);
     }
 }

@@ -114,6 +114,11 @@
         </div>
     </div>
 
+
+@endsection
+
+
+@push('scripts')
     <script>
         document.getElementById('editProfileBtn').addEventListener('click', function() {
             Swal.fire({
@@ -124,11 +129,19 @@
                 preConfirm: () => {
                     const name = Swal.getPopup().querySelector('#name').value;
                     const email = Swal.getPopup().querySelector('#email').value;
+                    const password = Swal.getPopup().querySelector('#password').value;
+                    const password_confirmation = Swal.getPopup().querySelector('#password_confirmation').value;
                     const profilepicture = Swal.getPopup().querySelector('#profilepicture').files[0];
+
                     if (!name || !email) {
                         Swal.showValidationMessage(`Please enter name and email`);
                     }
-                    return { name: name, email: email, profilepicture: profilepicture };
+
+                    if (password && password !== password_confirmation) {
+                        Swal.showValidationMessage(`Passwords do not match`);
+                    }
+
+                    return { name: name, email: email, password: password, profilepicture: profilepicture };
                 }
             }).then((result) => {
                 if (result.isConfirmed) {
@@ -136,6 +149,10 @@
                     formData.append('_token', '{{ csrf_token() }}');
                     formData.append('name', result.value.name);
                     formData.append('email', result.value.email);
+                    if (result.value.password) {
+                        formData.append('password', result.value.password);
+                        formData.append('password_confirmation', result.value.password);
+                    }
                     if (result.value.profilepicture) {
                         formData.append('profilepicture', result.value.profilepicture);
                     }
@@ -158,4 +175,4 @@
             });
         });
     </script>
-@endsection
+@endpush

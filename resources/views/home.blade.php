@@ -31,99 +31,149 @@
         </div>
     </div>
 
-    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-    <script>
-        function toggleCustomDateFields(value) {
-            if (value === 'custom') {
-                document.getElementById('start_date').style.display = 'inline-block';
-                document.getElementById('end_date').style.display = 'inline-block';
-            } else {
-                document.getElementById('start_date').style.display = 'none';
-                document.getElementById('end_date').style.display = 'none';
-            }
-        }
 
-        var productNames = @json($productNames);
-        var orderCounts = @json($orderCounts);
+    <div class="card shadow mb-4">
+        <div class="card-header py-3">
+            <h6 class="m-0 font-weight-bold text-primary">Low Stock Products</h6>
+        </div>
+        <div class="card-body">
+            <div class="table-responsive">
+                <table class="table table-bordered" id="lowStockTable" width="100%" cellspacing="0">
+                    <thead>
+                    <tr>
+                        <th>ID</th>
+                        <th>Name</th>
+                        <th>Stock</th>
+                        <th>Status</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    @foreach($lowStockProducts as $product)
+                        <tr>
+                            <td>{{ $product->id }}</td>
+                            <td>{{ $product->name }}</td>
+                            <td>{{ $product->stock }}</td>
+                            <td>
+                                @if($product->stock == 0)
+                                    <span class="badge bg-danger">No Stock</span>
+                                @elseif($product->stock < 20)
+                                    <span class="badge bg-warning text-dark">Low Stock</span>
+                                @else
+                                    <span class="badge bg-success">In Stock</span>
+                                @endif
+                            </td>
+                        </tr>
+                    @endforeach
+                    </tbody>
+                </table>
+            </div>
+        </div>
 
-        var ctx = document.getElementById("barchart").getContext('2d');
-        var myBarChart = new Chart(ctx, {
-            type: 'bar',
-            data: {
-                labels: productNames,
-                datasets: [{
-                    label: "Orders",
-                    backgroundColor: "#4e73df",
-                    hoverBackgroundColor: "#2e59d9",
-                    borderColor: "#4e73df",
-                    data: orderCounts,
-                }],
-            },
-            options: {
-                maintainAspectRatio: false,
-                layout: {
-                    padding: {
-                        left: 10,
-                        right: 25,
-                        top: 25,
-                        bottom: 0
+
+@endsection
+
+
+        @push('scripts')
+            <script>
+                $(document).ready(function() {
+                    $('#lowStockTable').DataTable();
+                });
+            </script>
+
+
+            <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+            <script>
+                function toggleCustomDateFields(value) {
+                    if (value === 'custom') {
+                        document.getElementById('start_date').style.display = 'inline-block';
+                        document.getElementById('end_date').style.display = 'inline-block';
+                    } else {
+                        document.getElementById('start_date').style.display = 'none';
+                        document.getElementById('end_date').style.display = 'none';
                     }
-                },
-                scales: {
-                    x: {
-                        grid: {
-                            display: false,
-                            drawBorder: false
-                        },
-                        ticks: {
-                            maxTicksLimit: 10
-                        },
-                        maxBarThickness: 25,
+                }
+
+                var productNames = @json($productNames);
+                var orderCounts = @json($orderCounts);
+
+                var ctx = document.getElementById("barchart").getContext('2d');
+                var myBarChart = new Chart(ctx, {
+                    type: 'bar',
+                    data: {
+                        labels: productNames,
+                        datasets: [{
+                            label: "Orders",
+                            backgroundColor: "#4e73df",
+                            hoverBackgroundColor: "#2e59d9",
+                            borderColor: "#4e73df",
+                            data: orderCounts,
+                        }],
                     },
-                    y: {
-                        min: 0,
-                        max: Math.max(...orderCounts) + 5,
-                        ticks: {
-                            maxTicksLimit: 5,
-                            padding: 10,
+                    options: {
+                        maintainAspectRatio: false,
+                        layout: {
+                            padding: {
+                                left: 10,
+                                right: 25,
+                                top: 25,
+                                bottom: 0
+                            }
                         },
-                        grid: {
-                            color: "rgb(234, 236, 244)",
-                            zeroLineColor: "rgb(234, 236, 244)",
-                            drawBorder: false,
-                            borderDash: [2],
-                            zeroLineBorderDash: [2]
-                        }
-                    },
-                },
-                plugins: {
-                    legend: {
-                        display: false
-                    },
-                    tooltip: {
-                        titleMarginBottom: 10,
-                        titleFont: {
-                            size: 14,
-                            color: '#6e707e'
+                        scales: {
+                            x: {
+                                grid: {
+                                    display: false,
+                                    drawBorder: false
+                                },
+                                ticks: {
+                                    maxTicksLimit: 10
+                                },
+                                maxBarThickness: 25,
+                            },
+                            y: {
+                                min: 0,
+                                max: Math.max(...orderCounts) + 5,
+                                ticks: {
+                                    maxTicksLimit: 5,
+                                    padding: 10,
+                                },
+                                grid: {
+                                    color: "rgb(234, 236, 244)",
+                                    zeroLineColor: "rgb(234, 236, 244)",
+                                    drawBorder: false,
+                                    borderDash: [2],
+                                    zeroLineBorderDash: [2]
+                                }
+                            },
                         },
-                        backgroundColor: "rgb(255,255,255)",
-                        bodyFont: {
-                            color: "#858796"
-                        },
-                        borderColor: '#dddfeb',
-                        borderWidth: 1,
-                        xPadding: 15,
-                        yPadding: 15,
-                        displayColors: false,
-                        caretPadding: 10,
-                        callbacks: {
-                            label: function (tooltipItem) {
-                                return tooltipItem.dataset.label + ': ' + tooltipItem.raw;
+                        plugins: {
+                            legend: {
+                                display: false
+                            },
+                            tooltip: {
+                                titleMarginBottom: 10,
+                                titleFont: {
+                                    size: 14,
+                                    color: '#6e707e'
+                                },
+                                backgroundColor: "rgb(255,255,255)",
+                                bodyFont: {
+                                    color: "#858796"
+                                },
+                                borderColor: '#dddfeb',
+                                borderWidth: 1,
+                                xPadding: 15,
+                                yPadding: 15,
+                                displayColors: false,
+                                caretPadding: 10,
+                                callbacks: {
+                                    label: function (tooltipItem) {
+                                        return tooltipItem.dataset.label + ': ' + tooltipItem.raw;
+                                    }
+                                }
                             }
                         }
                     }
-                }
-            }
-        });
-    </script>
-@endsection
+                });
+            </script>
+    @endpush

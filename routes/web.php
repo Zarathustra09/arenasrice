@@ -4,6 +4,7 @@ use App\Http\Controllers\AdminOrderController;
 use App\Http\Controllers\CartController;
 use App\Http\Controllers\CategoryController;
 use App\Http\Controllers\ContactController;
+use App\Http\Controllers\HomeController;
 use App\Http\Controllers\IngredientController;
 use App\Http\Controllers\LandingPageController;
 use App\Http\Controllers\LogController;
@@ -70,6 +71,10 @@ Route::group(['middleware' => ['auth', 'role:1']], function () {
     Route::delete('/admin/ingredients/{id}', [IngredientController::class, 'destroy'])->name('ingredients.destroy');
 
     Route::get('/admin/logs', [LogController::class, 'index'])->name('admin.logs.index');
+
+
+
+    Route::get('products/lowStockData', [HomeController::class, 'lowStockData'])->name('products.lowStockData');
 });
 
 
