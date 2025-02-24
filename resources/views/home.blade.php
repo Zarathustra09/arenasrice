@@ -104,7 +104,7 @@
                         datasets: [{
                             label: "Orders",
                             backgroundColor: "#4e73df",
-                            hoverBackgroundColor: "#2e59d9",
+                            hoverBackgroundColor: "#000000", // Change to black on hover
                             borderColor: "#4e73df",
                             data: orderCounts,
                         }],
@@ -154,13 +154,13 @@
                                 titleMarginBottom: 10,
                                 titleFont: {
                                     size: 14,
-                                    color: '#6e707e'
+                                    color: '#ffffff' // Make title text white
                                 },
-                                backgroundColor: "rgb(255,255,255)",
+                                backgroundColor: "#000000", // Change tooltip background to black
                                 bodyFont: {
-                                    color: "#858796"
+                                    color: "#ffffff" // Change text color to white for visibility
                                 },
-                                borderColor: '#dddfeb',
+                                borderColor: '#ffffff',
                                 borderWidth: 1,
                                 xPadding: 15,
                                 yPadding: 15,
@@ -175,5 +175,6 @@
                         }
                     }
                 });
+
             </script>
     @endpush
