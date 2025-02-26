@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Order;
 use Illuminate\Http\Request;
 use App\Models\Product;
 use App\Models\Ingredient;
@@ -51,6 +52,13 @@ class HomeController extends Controller
             });
         });
 
+
+        $monthlyEarnings = Order::whereMonth('created_at', now()->month)
+            ->sum('total_amount');
+        $annualEarnings = Order::whereYear('created_at', now()->year)
+            ->sum('total_amount');
+        $pendingOrders = Order::where('status', 'pending')->count();
+
         $productNames = $products->pluck('name');
         $totalSales = $products->pluck('total_sales');
         $totalSalesSum = $totalSales->sum(); // Calculate the total sales sum
@@ -58,6 +66,6 @@ class HomeController extends Controller
         $lowStockProducts = Product::whereColumn('stock', '<', 'low_stock_threshold')->get();
         $lowStockIngredients = Ingredient::whereColumn('stock', '<', 'low_stock_threshold')->get();
 
-        return view('home', compact('products', 'productNames', 'totalSales', 'totalSalesSum', 'lowStockProducts', 'lowStockIngredients', 'todaysSales'));
+        return view('home', compact('products', 'productNames', 'totalSales', 'totalSalesSum', 'lowStockProducts', 'lowStockIngredients', 'todaysSales','monthlyEarnings', 'annualEarnings', 'pendingOrders'));
     }
 }

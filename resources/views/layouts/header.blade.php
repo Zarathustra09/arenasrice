@@ -1,5 +1,6 @@
-<ul class="navbar-nav bg-gradient-primary sidebar sidebar-dark accordion" id="accordionSidebar">
-    <a class="sidebar-brand d-flex align-items-center justify-content-center" href="{{ route('home') }}">
+<ul class="navbar-nav sidebar sidebar-dark accordion" id="accordionSidebar" style="background-color: #9B734F;">
+
+<a class="sidebar-brand d-flex align-items-center justify-content-center" href="{{ route('home') }}">
         <div class="sidebar-brand-icon rotate-n-15">
 {{--            <i class="fas fa-utensils"></i>--}}
         </div>
@@ -17,7 +18,7 @@
     <hr class="sidebar-divider">
 
     <div class="sidebar-heading">
-        Resource Management
+        Product Management
     </div>
 
     <li class="nav-item {{ Request::routeIs('products.index') ? 'active' : '' }}">
@@ -26,16 +27,21 @@
             <span>Products</span></a>
     </li>
 
-    <li class="nav-item {{ Request::routeIs('ingredients.index') ? 'active' : '' }}">
-        <a class="nav-link" href="{{ route('ingredients.index') }}">
-            <i class="fas fa-fw fa-carrot"></i>
-            <span>Ingredients</span></a>
-    </li>
+
 
     <li class="nav-item {{ Request::routeIs('categories.index') ? 'active' : '' }}">
         <a class="nav-link" href="{{ route('categories.index') }}">
             <i class="fas fa-fw fa-list"></i>
             <span>Product Category</span></a>
+    </li>
+    <hr class="sidebar-divider">
+    <div class="sidebar-heading">
+        Supply Management
+    </div>
+    <li class="nav-item {{ Request::routeIs('ingredients.index') ? 'active' : '' }}">
+        <a class="nav-link" href="{{ route('ingredients.index') }}">
+            <i class="fas fa-fw fa-carrot"></i>
+            <span>Ingredients</span></a>
     </li>
 
     <hr class="sidebar-divider">
