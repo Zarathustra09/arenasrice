@@ -17,6 +17,7 @@ return new class extends Migration
             $table->string('name');
             $table->text('description')->nullable();
             $table->integer('stock');
+            $table->integer('low_stock_threshold')->default(20); // Add this line
             $table->string('image')->nullable();
             $table->timestamps();
         });

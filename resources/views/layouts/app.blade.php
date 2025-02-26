@@ -176,7 +176,7 @@
     <!-- Page level custom scripts -->
     <script src="{{ asset('dashboard/js/demo/chart-area-demo.js') }}"></script>
     <script src="{{ asset('dashboard/js/demo/chart-pie-demo.js') }}"></script>
-<
+
 <!-- Page level plugins -->
 <script src="{{asset('dashboard/vendor/datatables/jquery.dataTables.min.js')}}"></script>
 <script src="{{asset('dashboard/vendor/datatables/dataTables.bootstrap4.min.js')}}"></script>

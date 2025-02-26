@@ -1,3 +1,5 @@
+<!-- File: resources/views/admin/product/index.blade.php -->
+
 @extends('layouts.app')
 
 @section('content')
@@ -22,6 +24,7 @@
                         <th>Description</th>
                         <th>Price</th>
                         <th>Stock</th>
+                        <th>Low Stock Threshold</th> <!-- Add this line -->
                         <th>Category</th>
                         <th>Image</th>
                         <th>Status</th>
@@ -60,6 +63,7 @@
                     { data: 'description', name: 'description' },
                     { data: 'price', name: 'price' },
                     { data: 'stock', name: 'stock' },
+                    { data: 'low_stock_threshold', name: 'low_stock_threshold' }, // Add this line
                     { data: 'category.name', name: 'category.name' },
                     {
                         data: 'image',
@@ -78,7 +82,7 @@
                         render: function(data, type, row) {
                             if (data == 0) {
                                 return '<span class="badge bg-danger">No Stock</span>';
-                            } else if (data < 20) {
+                            } else if (data < row.low_stock_threshold) { // Update this line
                                 return '<span class="badge bg-warning text-dark">Low Stock</span>';
                             } else {
                                 return '<span class="badge bg-success">In Stock</span>';
@@ -101,77 +105,79 @@
             });
         });
 
+        // Add Product
+        $('#addProductBtn').on('click', function() {
+            $.get('{{ route('categories.get') }}', function(response) {
+                if (response.data) {
+                    let categoryOptions = '';
+                    response.data.forEach(category => {
+                        categoryOptions += `<option value="${category.id}">${category.name}</option>`;
+                    });
 
-            // Add Product
-            $('#addProductBtn').on('click', function() {
-                $.get('{{ route('categories.get') }}', function(response) {
-                    if (response.data) {
-                        let categoryOptions = '';
-                        response.data.forEach(category => {
-                            categoryOptions += `<option value="${category.id}">${category.name}</option>`;
-                        });
+                    Swal.fire({
+                        title: 'Add Product',
+                        html: `
+                            <input type="text" id="name" class="swal2-input" placeholder="Name">
+                            <input type="text" id="description" class="swal2-input" placeholder="Description">
+                            <input type="number" id="price" class="swal2-input" placeholder="Price">
+                            <input type="number" id="stock" class="swal2-input" placeholder="Stock">
+                            <input type="number" id="low_stock_threshold" class="swal2-input" placeholder="Low Stock Threshold"> <!-- Add this line -->
+                            <select id="category_id" class="swal2-input">
+                                <option value="">Select Category</option>
+                                ${categoryOptions}
+                            </select>
+                            <input type="file" id="image" class="swal2-file" placeholder="Image">
+                        `,
+                        confirmButtonText: 'Add',
+                        focusConfirm: false,
+                        preConfirm: () => {
+                            const name = Swal.getPopup().querySelector('#name').value;
+                            const description = Swal.getPopup().querySelector('#description').value;
+                            const price = Swal.getPopup().querySelector('#price').value;
+                            const stock = Swal.getPopup().querySelector('#stock').value;
+                            const low_stock_threshold = Swal.getPopup().querySelector('#low_stock_threshold').value; // Add this line
+                            const category_id = Swal.getPopup().querySelector('#category_id').value;
+                            const image = Swal.getPopup().querySelector('#image').files[0];
+                            if (!name || !price || !stock || !low_stock_threshold || !category_id || !image) { // Update this line
+                                Swal.showValidationMessage(`Please fill all required fields`);
+                            }
+                            return { name, description, price, stock, low_stock_threshold, category_id, image }; // Update this line
+                        }
+                    }).then((result) => {
+                        if (result.isConfirmed) {
+                            const formData = new FormData();
+                            formData.append('_token', '{{ csrf_token() }}');
+                            formData.append('name', result.value.name);
+                            formData.append('description', result.value.description);
+                            formData.append('price', result.value.price);
+                            formData.append('stock', result.value.stock);
+                            formData.append('low_stock_threshold', result.value.low_stock_threshold); // Add this line
+                            formData.append('category_id', result.value.category_id);
+                            formData.append('image', result.value.image);
 
-                        Swal.fire({
-                            title: 'Add Product',
-                            html: `
-                                <input type="text" id="name" class="swal2-input" placeholder="Name">
-                                <input type="text" id="description" class="swal2-input" placeholder="Description">
-                                <input type="number" id="price" class="swal2-input" placeholder="Price">
-                                <input type="number" id="stock" class="swal2-input" placeholder="Stock">
-                                <select id="category_id" class="swal2-input">
-                                    <option value="">Select Category</option>
-                                    ${categoryOptions}
-                                </select>
-                                <input type="file" id="image" class="swal2-file" placeholder="Image">
-                            `,
-                            confirmButtonText: 'Add',
-                            focusConfirm: false,
-                            preConfirm: () => {
-                                const name = Swal.getPopup().querySelector('#name').value;
-                                const description = Swal.getPopup().querySelector('#description').value;
-                                const price = Swal.getPopup().querySelector('#price').value;
-                                const stock = Swal.getPopup().querySelector('#stock').value;
-                                const category_id = Swal.getPopup().querySelector('#category_id').value;
-                                const image = Swal.getPopup().querySelector('#image').files[0];
-                                if (!name || !price || !stock || !category_id || !image) {
-                                    Swal.showValidationMessage(`Please fill all required fields`);
+                            $.ajax({
+                                url: '{{ route('products.store') }}',
+                                type: 'POST',
+                                data: formData,
+                                processData: false,
+                                contentType: false,
+                                success: function(response) {
+                                    Swal.fire('Success', response.message, 'success');
+                                    $('#dataTable').DataTable().ajax.reload();
+                                },
+                                error: function(response) {
+                                    Swal.fire('Error', response.responseJSON.message, 'error');
                                 }
-                                return { name, description, price, stock, category_id, image };
-                            }
-                        }).then((result) => {
-                            if (result.isConfirmed) {
-                                const formData = new FormData();
-                                formData.append('_token', '{{ csrf_token() }}');
-                                formData.append('name', result.value.name);
-                                formData.append('description', result.value.description);
-                                formData.append('price', result.value.price);
-                                formData.append('stock', result.value.stock);
-                                formData.append('category_id', result.value.category_id);
-                                formData.append('image', result.value.image);
-
-                                $.ajax({
-                                    url: '{{ route('products.store') }}',
-                                    type: 'POST',
-                                    data: formData,
-                                    processData: false,
-                                    contentType: false,
-                                    success: function(response) {
-                                        Swal.fire('Success', response.message, 'success');
-                                        $('#dataTable').DataTable().ajax.reload();
-                                    },
-                                    error: function(response) {
-                                        Swal.fire('Error', response.responseJSON.message, 'error');
-                                    }
-                                });
-                            }
-                        });
-                    } else {
-                        Swal.fire('Error', 'Failed to load categories.', 'error');
-                    }
-                }).fail(function() {
+                            });
+                        }
+                    });
+                } else {
                     Swal.fire('Error', 'Failed to load categories.', 'error');
-                });
+                }
+            }).fail(function() {
+                Swal.fire('Error', 'Failed to load categories.', 'error');
             });
+        });
 
             // Edit Product
             $(document).on('click', '.editProductBtn', function() {
@@ -189,16 +195,17 @@
                                 Swal.fire({
                                     title: 'Edit Product',
                                     html: `
-                                        <input type="text" id="name" class="swal2-input" value="${product.name}" placeholder="Name">
-                                        <input type="text" id="description" class="swal2-input" value="${product.description}" placeholder="Description">
-                                        <input type="number" id="price" class="swal2-input" value="${product.price}" placeholder="Price">
-                                        <input type="number" id="stock" class="swal2-input" value="${product.stock}" placeholder="Stock">
-                                        <select id="category_id" class="swal2-input">
-                                            <option value="">Select Category</option>
-                                            ${categoryOptions}
-                                        </select>
-                                        <input type="file" id="image" class="swal2-file" placeholder="Image">
-                                    `,
+                                    <input type="text" id="name" class="swal2-input" value="${product.name}" placeholder="Name">
+                                    <input type="text" id="description" class="swal2-input" value="${product.description}" placeholder="Description">
+                                    <input type="number" id="price" class="swal2-input" value="${product.price}" placeholder="Price">
+                                    <input type="number" id="stock" class="swal2-input" value="${product.stock}" placeholder="Stock">
+                                    <input type="number" id="low_stock_threshold" class="swal2-input" value="${product.low_stock_threshold}" placeholder="Low Stock Threshold"> <!-- Add this line -->
+                                    <select id="category_id" class="swal2-input">
+                                        <option value="">Select Category</option>
+                                        ${categoryOptions}
+                                    </select>
+                                    <input type="file" id="image" class="swal2-file" placeholder="Image">
+                                `,
                                     confirmButtonText: 'Update',
                                     focusConfirm: false,
                                     preConfirm: () => {
@@ -206,12 +213,13 @@
                                         const description = Swal.getPopup().querySelector('#description').value;
                                         const price = Swal.getPopup().querySelector('#price').value;
                                         const stock = Swal.getPopup().querySelector('#stock').value;
+                                        const low_stock_threshold = Swal.getPopup().querySelector('#low_stock_threshold').value; // Add this line
                                         const category_id = Swal.getPopup().querySelector('#category_id').value;
                                         const image = Swal.getPopup().querySelector('#image').files[0];
-                                        if (!name || !price || !stock || !category_id) {
+                                        if (!name || !price || !stock || !low_stock_threshold || !category_id) { // Update this line
                                             Swal.showValidationMessage(`Please fill all required fields`);
                                         }
-                                        return { name, description, price, stock, category_id, image };
+                                        return { name, description, price, stock, low_stock_threshold, category_id, image }; // Update this line
                                     }
                                 }).then((result) => {
                                     if (result.isConfirmed) {
@@ -222,6 +230,7 @@
                                         formData.append('description', result.value.description);
                                         formData.append('price', result.value.price);
                                         formData.append('stock', result.value.stock);
+                                        formData.append('low_stock_threshold', result.value.low_stock_threshold); // Add this line
                                         formData.append('category_id', result.value.category_id);
                                         if (result.value.image) {
                                             formData.append('image', result.value.image);

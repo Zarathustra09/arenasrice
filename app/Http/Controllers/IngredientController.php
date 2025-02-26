@@ -13,6 +13,58 @@ class IngredientController extends Controller
         return view('admin.ingredients.index');
     }
 
+
+    // File: app/Http/Controllers/IngredientController.php
+
+    public function store(Request $request)
+    {
+        $request->validate([
+            'sku' => 'required|string|max:255|unique:ingredients,sku',
+            'name' => 'required|string|max:255',
+            'description' => 'nullable|string',
+            'stock' => 'required|integer',
+            'low_stock_threshold' => 'required|integer', // Add this line
+            'image' => 'nullable|image'
+        ]);
+
+        try {
+            $data = $request->all();
+            if ($request->hasFile('image')) {
+                $data['image'] = $request->file('image')->store('images', 'public');
+            }
+            $ingredient = Ingredient::create($data);
+            return response()->json(['message' => 'Ingredient has been added.', 'data' => $ingredient], 201);
+        } catch (\Exception $e) {
+            Log::error('Error adding ingredient: ' . $e->getMessage());
+            return response()->json(['message' => 'An error occurred while adding the ingredient.'], 500);
+        }
+    }
+
+    public function update(Request $request, string $id)
+    {
+        $request->validate([
+            'sku' => 'required|string|max:255|unique:ingredients,sku,' . $id,
+            'name' => 'required|string|max:255',
+            'description' => 'nullable|string',
+            'stock' => 'required|integer',
+            'low_stock_threshold' => 'required|integer', // Add this line
+            'image' => 'nullable|image'
+        ]);
+
+        try {
+            $ingredient = Ingredient::find($id);
+            $data = $request->all();
+            if ($request->hasFile('image')) {
+                $data['image'] = $request->file('image')->store('images', 'public');
+            }
+            $ingredient->update($data);
+
+            return response()->json(['message' => 'Ingredient has been updated.'], 200);
+        } catch (\Exception $e) {
+            return response()->json(['message' => 'An error occurred while updating the ingredient.'], 500);
+        }
+    }
+
     public function dataTable()
     {
         $search = request()->input('search.value');
@@ -31,28 +83,7 @@ class IngredientController extends Controller
         ]);
     }
 
-    public function store(Request $request)
-    {
-        $request->validate([
-            'sku' => 'required|string|max:255|unique:ingredients,sku',
-            'name' => 'required|string|max:255',
-            'description' => 'nullable|string',
-            'stock' => 'required|integer',
-            'image' => 'nullable|image'
-        ]);
 
-        try {
-            $data = $request->all();
-            if ($request->hasFile('image')) {
-                $data['image'] = $request->file('image')->store('images', 'public');
-            }
-            $ingredient = Ingredient::create($data);
-            return response()->json(['message' => 'Ingredient has been added.', 'data' => $ingredient], 201);
-        } catch (\Exception $e) {
-            Log::error('Error adding ingredient: ' . $e->getMessage());
-            return response()->json(['message' => 'An error occurred while adding the ingredient.'], 500);
-        }
-    }
 
     public function show(string $id)
     {
@@ -61,30 +92,6 @@ class IngredientController extends Controller
             return response()->json(['data' => $ingredient]);
         } catch (\Exception $e) {
             return response()->json(['message' => 'An error occurred while retrieving the ingredient.'], 500);
-        }
-    }
-
-    public function update(Request $request, string $id)
-    {
-        $request->validate([
-            'sku' => 'required|string|max:255|unique:ingredients,sku,' . $id,
-            'name' => 'required|string|max:255',
-            'description' => 'nullable|string',
-            'stock' => 'required|integer',
-            'image' => 'nullable|image'
-        ]);
-
-        try {
-            $ingredient = Ingredient::find($id);
-            $data = $request->all();
-            if ($request->hasFile('image')) {
-                $data['image'] = $request->file('image')->store('images', 'public');
-            }
-            $ingredient->update($data);
-
-            return response()->json(['message' => 'Ingredient has been updated.'], 200);
-        } catch (\Exception $e) {
-            return response()->json(['message' => 'An error occurred while updating the ingredient.'], 500);
         }
     }
 

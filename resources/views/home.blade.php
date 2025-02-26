@@ -26,6 +26,9 @@
                         <canvas id="barchart"></canvas>
                     </div>
                     <hr>
+                    <div class="text-center">
+                        <h6 class="m-0 font-weight-bold text-primary">Total Sales: ₱{{ number_format($totalSalesSum, 2) }}</h6>
+                    </div>
                 </div>
             </div>
         </div>
@@ -37,7 +40,7 @@
         </div>
         <div class="card-body">
             <div class="table-responsive">
-                <table class="table table-bordered" id="lowStockTable" width="100%" cellspacing="0">
+                <table class="table table-bordered" id="lowStockProductsTable" width="100%" cellspacing="0">
                     <thead>
                     <tr>
                         <th>ID</th>
@@ -55,7 +58,45 @@
                             <td>
                                 @if($product->stock == 0)
                                     <span class="badge bg-danger">No Stock</span>
-                                @elseif($product->stock < 20)
+                                @elseif($product->stock < $product->low_stock_threshold)
+                                    <span class="badge bg-warning text-dark">Low Stock</span>
+                                @else
+                                    <span class="badge bg-success">In Stock</span>
+                                @endif
+                            </td>
+                        </tr>
+                    @endforeach
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+    <div class="card shadow mb-4">
+        <div class="card-header py-3">
+            <h6 class="m-0 font-weight-bold text-primary">Low Stock Ingredients</h6>
+        </div>
+        <div class="card-body">
+            <div class="table-responsive">
+                <table class="table table-bordered" id="lowStockIngredientsTable" width="100%" cellspacing="0">
+                    <thead>
+                    <tr>
+                        <th>ID</th>
+                        <th>Name</th>
+                        <th>Stock</th>
+                        <th>Status</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    @foreach($lowStockIngredients as $ingredient)
+                        <tr>
+                            <td>{{ $ingredient->id }}</td>
+                            <td>{{ $ingredient->name }}</td>
+                            <td>{{ $ingredient->stock }}</td>
+                            <td>
+                                @if($ingredient->stock == 0)
+                                    <span class="badge bg-danger">No Stock</span>
+                                @elseif($ingredient->stock < $ingredient->low_stock_threshold)
                                     <span class="badge bg-warning text-dark">Low Stock</span>
                                 @else
                                     <span class="badge bg-success">In Stock</span>
@@ -73,7 +114,8 @@
 @push('scripts')
     <script>
         $(document).ready(function() {
-            $('#lowStockTable').DataTable();
+            $('#lowStockProductsTable').DataTable();
+            $('#lowStockIngredientsTable').DataTable();
         });
 
         function toggleCustomDateFields(value) {
@@ -97,7 +139,7 @@
                 datasets: [{
                     label: "Total Sales (₱)",
                     backgroundColor: "#4e73df",
-                    hoverBackgroundColor: "#000000", // Change to black on hover
+                    hoverBackgroundColor: "#000000",
                     borderColor: "#4e73df",
                     data: totalSales,
                 }],
@@ -147,11 +189,11 @@
                         titleMarginBottom: 10,
                         titleFont: {
                             size: 14,
-                            color: '#ffffff' // Make title text white
+                            color: '#ffffff'
                         },
-                        backgroundColor: "#000000", // Change tooltip background to black
+                        backgroundColor: "#000000",
                         bodyFont: {
-                            color: "#ffffff" // Change text color to white for visibility
+                            color: "#ffffff"
                         },
                         borderColor: '#ffffff',
                         borderWidth: 1,

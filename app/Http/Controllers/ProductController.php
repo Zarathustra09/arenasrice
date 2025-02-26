@@ -34,6 +34,9 @@ class ProductController extends Controller
             'data' => $products
         ]);
     }
+
+    // File: app/Http/Controllers/ProductController.php
+
     public function store(Request $request)
     {
         $request->validate([
@@ -42,6 +45,7 @@ class ProductController extends Controller
             'description' => 'nullable|string',
             'price' => 'required|numeric',
             'stock' => 'required|integer',
+            'low_stock_threshold' => 'required|integer', // Add this line
             'image' => 'nullable|image'
         ]);
 
@@ -51,12 +55,40 @@ class ProductController extends Controller
                 $data['image'] = $request->file('image')->store('images', 'public');
             }
             $product = Product::create($data);
+            Log::info('Product has been added: ' . $product);
             return response()->json(['message' => 'Product has been added.', 'data' => $product], 201);
         } catch (\Exception $e) {
             Log::error('Error adding product: ' . $e->getMessage());
             return response()->json(['message' => 'An error occurred while adding the product.'], 500);
         }
     }
+
+    public function update(Request $request, string $id)
+    {
+        $request->validate([
+            'category_id' => 'required|exists:categories,id',
+            'name' => 'required|string|max:255',
+            'description' => 'nullable|string',
+            'price' => 'required|numeric',
+            'stock' => 'required|integer',
+            'low_stock_threshold' => 'required|integer', // Add this line
+            'image' => 'nullable|image'
+        ]);
+
+        try {
+            $product = Product::find($id);
+            $data = $request->all();
+            if ($request->hasFile('image')) {
+                $data['image'] = $request->file('image')->store('images', 'public');
+            }
+            $product->update($data);
+            Log::info('Product has been added: ' . $product);
+            return response()->json(['message' => 'Product has been updated.'], 200);
+        } catch (\Exception $e) {
+            return response()->json(['message' => 'An error occurred while updating the product.'], 500);
+        }
+    }
+
 
     public function show(string $id)
     {
@@ -78,17 +110,7 @@ class ProductController extends Controller
         }
     }
 
-    public function update(Request $request, string $id)
-    {
-        try {
-            $product = Product::find($id);
-            $product->update($request->all());
 
-            return response()->json(['message' => 'Product has been updated.'], 200);
-        } catch (\Exception $e) {
-            return response()->json(['message' => 'An error occurred while updating the product.'], 500);
-        }
-    }
 
     public function destroy(string $id)
     {

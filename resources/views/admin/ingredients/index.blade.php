@@ -1,3 +1,5 @@
+<!-- File: resources/views/admin/ingredients/index.blade.php -->
+
 @extends('layouts.app')
 
 @section('content')
@@ -22,8 +24,9 @@
                         <th>Name</th>
                         <th>Description</th>
                         <th>Stock</th>
+                        <th>Low Stock Threshold</th> <!-- Add this line -->
                         <th>Image</th>
-                        <th>Status</th> <!-- New Status Column -->
+                        <th>Status</th>
                         <th>Actions</th>
                     </tr>
                     </thead>
@@ -59,6 +62,7 @@
                     { data: 'name', name: 'name' },
                     { data: 'description', name: 'description' },
                     { data: 'stock', name: 'stock' },
+                    { data: 'low_stock_threshold', name: 'low_stock_threshold' }, // Add this line
                     {
                         data: 'image',
                         name: 'image',
@@ -76,7 +80,7 @@
                         render: function(data, type, row) {
                             if (data == 0) {
                                 return '<span class="badge bg-danger">No Stock</span>';
-                            } else if (data < 20) {
+                            } else if (data < row.low_stock_threshold) { // Update this line
                                 return '<span class="badge bg-warning text-dark">Low Stock</span>';
                             } else {
                                 return '<span class="badge bg-success">In Stock</span>';
@@ -107,6 +111,7 @@
                         <input type="text" id="name" class="swal2-input" placeholder="Name">
                         <input type="text" id="description" class="swal2-input" placeholder="Description">
                         <input type="number" id="stock" class="swal2-input" placeholder="Stock">
+                        <input type="number" id="low_stock_threshold" class="swal2-input" placeholder="Low Stock Threshold"> <!-- Add this line -->
                         <input type="file" id="image" class="swal2-file" placeholder="Image">
                     `,
                     confirmButtonText: 'Add',
@@ -116,11 +121,12 @@
                         const name = Swal.getPopup().querySelector('#name').value;
                         const description = Swal.getPopup().querySelector('#description').value;
                         const stock = Swal.getPopup().querySelector('#stock').value;
+                        const low_stock_threshold = Swal.getPopup().querySelector('#low_stock_threshold').value; // Add this line
                         const image = Swal.getPopup().querySelector('#image').files[0];
-                        if (!sku || !name || !stock || !image) {
+                        if (!sku || !name || !stock || !low_stock_threshold || !image) { // Update this line
                             Swal.showValidationMessage(`Please fill all required fields`);
                         }
-                        return { sku, name, description, stock, image };
+                        return { sku, name, description, stock, low_stock_threshold, image }; // Add this line
                     }
                 }).then((result) => {
                     if (result.isConfirmed) {
@@ -130,6 +136,7 @@
                         formData.append('name', result.value.name);
                         formData.append('description', result.value.description);
                         formData.append('stock', result.value.stock);
+                        formData.append('low_stock_threshold', result.value.low_stock_threshold); // Add this line
                         formData.append('image', result.value.image);
 
                         $.ajax({
@@ -164,6 +171,7 @@
                                 <input type="text" id="name" class="swal2-input" value="${ingredient.name}" placeholder="Name">
                                 <input type="text" id="description" class="swal2-input" value="${ingredient.description}" placeholder="Description">
                                 <input type="number" id="stock" class="swal2-input" value="${ingredient.stock}" placeholder="Stock">
+                                <input type="number" id="low_stock_threshold" class="swal2-input" value="${ingredient.low_stock_threshold}" placeholder="Low Stock Threshold"> <!-- Add this line -->
                                 <input type="file" id="image" class="swal2-file" placeholder="Image">
                             `,
                             confirmButtonText: 'Update',
@@ -173,11 +181,12 @@
                                 const name = Swal.getPopup().querySelector('#name').value;
                                 const description = Swal.getPopup().querySelector('#description').value;
                                 const stock = Swal.getPopup().querySelector('#stock').value;
+                                const low_stock_threshold = Swal.getPopup().querySelector('#low_stock_threshold').value; // Add this line
                                 const image = Swal.getPopup().querySelector('#image').files[0];
-                                if (!sku || !name || !stock) {
+                                if (!sku || !name || !stock || !low_stock_threshold) { // Update this line
                                     Swal.showValidationMessage(`Please fill all required fields`);
                                 }
-                                return { sku, name, description, stock, image };
+                                return { sku, name, description, stock, low_stock_threshold, image }; // Add this line
                             }
                         }).then((result) => {
                             if (result.isConfirmed) {
@@ -188,6 +197,7 @@
                                 formData.append('name', result.value.name);
                                 formData.append('description', result.value.description);
                                 formData.append('stock', result.value.stock);
+                                formData.append('low_stock_threshold', result.value.low_stock_threshold); // Add this line
                                 if (result.value.image) {
                                     formData.append('image', result.value.image);
                                 }

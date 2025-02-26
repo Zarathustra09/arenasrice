@@ -11,13 +11,12 @@ class Ingredient extends Model
 {
     use HasFactory, LogsActivity;
 
-    protected $fillable = ['sku', 'name', 'description', 'stock', 'image'];
+    protected $fillable = ['sku', 'name', 'description', 'stock', 'low_stock_threshold', 'image']; // Add 'low_stock_threshold'
 
-    // Configure the activity log options
     public function getActivitylogOptions(): LogOptions
     {
         return LogOptions::defaults()
-            ->logOnly(['sku', 'name', 'description', 'stock', 'image'])
+            ->logOnly(['sku', 'name', 'description', 'stock', 'low_stock_threshold', 'image']) // Add 'low_stock_threshold'
             ->useLogName('ingredient')
             ->logOnlyDirty();
     }

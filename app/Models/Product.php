@@ -11,7 +11,7 @@ class Product extends Model
 {
     use HasFactory, LogsActivity;
 
-    protected $fillable = ['category_id', 'name', 'description', 'price', 'stock', 'image'];
+    protected $fillable = ['category_id', 'name', 'description', 'price', 'stock', 'image', 'low_stock_threshold'];
 
     // Relationship: A product belongs to a category
     public function category()

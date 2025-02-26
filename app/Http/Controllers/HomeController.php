@@ -4,25 +4,17 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Models\Product;
-use App\Models\OrderItem;
+use App\Models\Ingredient;
 
 class HomeController extends Controller
 {
-    /**
-     * Create a new controller instance.
-     *
-     * @return void
-     */
     public function __construct()
     {
         $this->middleware('auth');
     }
 
-    /**
-     * Show the application dashboard.
-     *
-     * @return \Illuminate\Contracts\Support\Renderable
-     */
+    // File: app/Http/Controllers/HomeController.php
+
     public function index(Request $request)
     {
         $query = Product::with(['orderItems' => function ($query) use ($request) {
@@ -53,16 +45,11 @@ class HomeController extends Controller
 
         $productNames = $products->pluck('name');
         $totalSales = $products->pluck('total_sales');
-        $lowStockProducts = Product::where('stock', '<', 20)->get();
+        $totalSalesSum = $totalSales->sum(); // Calculate the total sales sum
 
-        return view('home', compact('products', 'productNames', 'totalSales', 'lowStockProducts'));
-    }
+        $lowStockProducts = Product::whereColumn('stock', '<', 'low_stock_threshold')->get();
+        $lowStockIngredients = Ingredient::whereColumn('stock', '<', 'low_stock_threshold')->get();
 
-
-    public function lowStockData()
-    {
-        $products = Product::where('stock', '<', 20)->get();
-
-        return response()->json($products);
+        return view('home', compact('products', 'productNames', 'totalSales', 'totalSalesSum', 'lowStockProducts', 'lowStockIngredients'));
     }
 }

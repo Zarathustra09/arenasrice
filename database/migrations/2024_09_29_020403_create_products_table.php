@@ -9,19 +9,21 @@ return new class extends Migration
     /**
      * Run the migrations.
      */
+    // File: database/migrations/2024_09_29_020403_create_products_table.php
+
     public function up(): void
     {
         Schema::create('products', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('category_id')->constrained()->onDelete('cascade'); // Link to categories table
+            $table->foreignId('category_id')->constrained()->onDelete('cascade');
             $table->string('name');
             $table->text('description')->nullable();
             $table->decimal('price', 10, 2);
             $table->integer('stock')->default(0);
+            $table->integer('low_stock_threshold')->default(20); // Add this line
             $table->string('image')->nullable();
             $table->timestamps();
         });
-
     }
 
     /**
