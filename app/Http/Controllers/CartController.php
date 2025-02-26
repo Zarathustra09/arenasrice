@@ -15,47 +15,44 @@ class CartController extends Controller
         return view('guest.cart.index', compact('cartItems'));
     }
 
-    public function add(Request $request)
-    {
-        // Check if the user is authenticated
-        if (!Auth::check()) {
-            return redirect()->route('login')->with('error', 'You need to login to add products to cart!');
-        }
-
-        $request->validate([
-            'product_id' => 'required|exists:products,id',
-            'quantity' => 'required|integer|min:1'
-        ]);
-
-        $product = Product::findOrFail($request->input('product_id'));
-        $requestedQuantity = $request->input('quantity', 1);
-
-        $cartItem = Cart::where('user_id', Auth::id())
-            ->where('product_id', $request->input('product_id'))
-            ->first();
-
-        $currentQuantity = $cartItem ? $cartItem->quantity : 0;
-        $totalQuantity = $currentQuantity + $requestedQuantity;
-
-        if ($totalQuantity > $product->stock) {
-            return redirect()->back()->with('error', 'The requested quantity exceeds the available stock!');
-        }
-
-        if ($cartItem) {
-            // If the item already exists in the cart, update the quantity
-            $cartItem->quantity = $totalQuantity;
-            $cartItem->save();
-        } else {
-            // If the item does not exist in the cart, create a new record
-            Cart::create([
-                'user_id' => Auth::id(),
-                'product_id' => $request->input('product_id'),
-                'quantity' => $requestedQuantity, // Default quantity
-            ]);
-        }
-
-        return redirect()->back()->with('success', 'Product added to cart successfully!');
+   public function add(Request $request)
+{
+    if (!Auth::check()) {
+        return response()->json(['success' => false, 'message' => 'You need to login to add products to cart!'], 401);
     }
+
+    $request->validate([
+        'product_id' => 'required|exists:products,id',
+        'quantity' => 'required|integer|min:1'
+    ]);
+
+    $product = Product::findOrFail($request->input('product_id'));
+    $requestedQuantity = $request->input('quantity', 1);
+
+    $cartItem = Cart::where('user_id', Auth::id())
+        ->where('product_id', $request->input('product_id'))
+        ->first();
+
+    $currentQuantity = $cartItem ? $cartItem->quantity : 0;
+    $totalQuantity = $currentQuantity + $requestedQuantity;
+
+    if ($totalQuantity > $product->stock) {
+        return response()->json(['success' => false, 'message' => 'The requested quantity exceeds the available stock!'], 400);
+    }
+
+    if ($cartItem) {
+        $cartItem->quantity = $totalQuantity;
+        $cartItem->save();
+    } else {
+        Cart::create([
+            'user_id' => Auth::id(),
+            'product_id' => $request->input('product_id'),
+            'quantity' => $requestedQuantity,
+        ]);
+    }
+
+    return response()->json(['success' => true, 'message' => 'Product added to cart successfully!']);
+}
 
     public function destroy($id)
     {

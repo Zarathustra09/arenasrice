@@ -80,7 +80,7 @@
                                                     <p>{{ $product->description }}</p>
                                                     <div class="d-flex justify-content-between flex-lg-wrap">
                                                         <p class="text-dark fs-5 fw-bold mb-0">₱{{ $product->price }}</p>
-                                                        <form action="{{ route('cart.store') }}" method="POST">
+                                                        <form class="add-to-cart-form" action="{{ route('cart.store') }}" method="POST">
                                                             @csrf
                                                             <input type="hidden" name="product_id" value="{{ $product->id }}">
                                                             <input type="number" name="quantity" value="1" min="1" max="{{$product->stock}}" class="form-control mb-2" style="width: 60px;">
@@ -133,3 +133,78 @@
     </div>
 
 @endsection
+
+
+
+@push('scripts')
+    <script>
+        document.querySelectorAll('.add-to-cart-form').forEach(form => {
+            form.addEventListener('submit', function(event) {
+                event.preventDefault();
+                var formData = new FormData(form);
+
+                fetch(form.action, {
+                    method: 'POST',
+                    body: formData,
+                    headers: {
+                        'X-CSRF-TOKEN': document.querySelector('input[name="_token"]').value
+                    }
+                })
+                    .then(response => response.json())
+                    .then(data => {
+                        if (data.success) {
+                            // Toast success notification
+                            const Toast = Swal.mixin({
+                                toast: true,
+                                position: 'top-end',
+                                showConfirmButton: false,
+                                timer: 3000,
+                                timerProgressBar: true,
+                                didOpen: (toast) => {
+                                    toast.addEventListener('mouseenter', Swal.stopTimer)
+                                    toast.addEventListener('mouseleave', Swal.resumeTimer)
+                                }
+                            });
+
+                            Toast.fire({
+                                icon: 'success',
+                                title: 'Product added to cart successfully!'
+                            }).then(() => {
+                                location.reload();
+                            });
+                        } else {
+                            // Toast error notification
+                            const Toast = Swal.mixin({
+                                toast: true,
+                                position: 'top-end',
+                                showConfirmButton: false,
+                                timer: 3000,
+                                timerProgressBar: true
+                            });
+
+                            Toast.fire({
+                                icon: 'error',
+                                title: data.message
+                            });
+                        }
+                    })
+                    .catch(error => {
+                        console.error('Error:', error);
+                        // Toast error notification
+                        const Toast = Swal.mixin({
+                            toast: true,
+                            position: 'top-end',
+                            showConfirmButton: false,
+                            timer: 3000,
+                            timerProgressBar: true
+                        });
+
+                        Toast.fire({
+                            icon: 'error',
+                            title: 'An error occurred while adding the product to the cart.'
+                        });
+                    });
+            });
+        });
+    </script>
+@endpush

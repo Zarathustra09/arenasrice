@@ -11,7 +11,7 @@
     </div>
     <div class="container-fluid fruite py-5">
         <div class="container py-5">
-            <h1 class="mb-4">Fresh Rice Shop</h1>
+            <h1 class="mb-4">Fresh Bakery Shop</h1>
             <div class="row g-4">
                 <div class="col-12">
                     <div class="row g-4">
@@ -34,7 +34,7 @@
                                                 <h5 class="card-title">{{ $product->name }}</h5>
                                                 <p class="card-text">{{ $product->description }}</p>
                                                 <p class="card-text">₱{{ $product->price }}/kg</p>
-                                                <form action="{{ route('cart.store') }}" method="POST">
+                                                <form class="add-to-cart-form" action="{{ route('cart.store') }}" method="POST">
                                                     @csrf
                                                     <input type="hidden" name="product_id" value="{{ $product->id }}">
                                                     <input type="number" name="quantity" value="1" min="1" max="{{$product->stock}}" class="form-control mb-2" style="width: 60px;">
@@ -60,3 +60,76 @@
         </div>
     </div>
 @endsection
+
+@push('scripts')
+    <script>
+        document.querySelectorAll('.add-to-cart-form').forEach(form => {
+            form.addEventListener('submit', function(event) {
+                event.preventDefault();
+                var formData = new FormData(form);
+
+                fetch(form.action, {
+                    method: 'POST',
+                    body: formData,
+                    headers: {
+                        'X-CSRF-TOKEN': document.querySelector('input[name="_token"]').value
+                    }
+                })
+                    .then(response => response.json())
+                    .then(data => {
+                        if (data.success) {
+                            // Toast success notification
+                            const Toast = Swal.mixin({
+                                toast: true,
+                                position: 'top-end',
+                                showConfirmButton: false,
+                                timer: 3000,
+                                timerProgressBar: true,
+                                didOpen: (toast) => {
+                                    toast.addEventListener('mouseenter', Swal.stopTimer)
+                                    toast.addEventListener('mouseleave', Swal.resumeTimer)
+                                }
+                            });
+
+                            Toast.fire({
+                                icon: 'success',
+                                title: 'Product added to cart successfully!'
+                            }).then(() => {
+                                location.reload();
+                            });
+                        } else {
+                            // Toast error notification
+                            const Toast = Swal.mixin({
+                                toast: true,
+                                position: 'top-end',
+                                showConfirmButton: false,
+                                timer: 3000,
+                                timerProgressBar: true
+                            });
+
+                            Toast.fire({
+                                icon: 'error',
+                                title: data.message
+                            });
+                        }
+                    })
+                    .catch(error => {
+                        console.error('Error:', error);
+                        // Toast error notification
+                        const Toast = Swal.mixin({
+                            toast: true,
+                            position: 'top-end',
+                            showConfirmButton: false,
+                            timer: 3000,
+                            timerProgressBar: true
+                        });
+
+                        Toast.fire({
+                            icon: 'error',
+                            title: 'An error occurred while adding the product to the cart.'
+                        });
+                    });
+            });
+        });
+    </script>
+@endpush
