@@ -13,8 +13,10 @@
                     <h4 class="mb-3 text-secondary">100% Premium</h4>
                     <h1 class="mb-5 display-3 text-primary">Fresh & Premium</h1>
                     <div class="position-relative mx-auto">
-                        <input class="form-control border-2 border-secondary w-75 py-3 px-4 rounded-pill" type="number" placeholder="Search for Rice Varieties">
-                        <button type="submit" class="btn btn-primary border-2 border-secondary py-3 px-4 position-absolute rounded-pill text-white h-100" style="top: 0; right: 25%;">Search Now</button>
+                        <form action="{{ route('shop.index') }}" method="GET" class="d-flex">
+                            <input class="form-control border-2 border-secondary w-75 py-3 px-4 rounded-pill" type="text" name="search" placeholder="Search for Baked Goods">
+                            <button type="submit" class="btn btn-primary border-2 border-secondary py-3 px-4 position-absolute rounded-pill text-white h-100" style="top: 0; right: 25%;">Search Now</button>
+                        </form>
                     </div>
                 </div>
                 <div class="col-md-12 col-lg-5">

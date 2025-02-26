@@ -8,10 +8,17 @@ use Illuminate\Http\Request;
 
 class ShopController extends Controller
 {
-    public function index()
+    public function index(Request $request)
     {
+        $search = $request->input('search');
         $categories = Category::all();
-        $products = Product::with('category')->paginate(10);
+        $query = Product::query();
+
+        if ($search) {
+            $query->where('name', 'like', '%' . $search . '%');
+        }
+
+        $products = $query->with('category')->paginate(10);
         return view('guest.shop.index', compact('categories', 'products'));
     }
 
