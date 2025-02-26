@@ -25,7 +25,7 @@ class HomeController extends Controller
      */
     public function index(Request $request)
     {
-        $query = Product::withCount(['orderItems' => function ($query) use ($request) {
+        $query = Product::with(['orderItems' => function ($query) use ($request) {
             if ($request->has('filter')) {
                 switch ($request->filter) {
                     case 'today':
@@ -44,12 +44,18 @@ class HomeController extends Controller
             }
         }]);
 
-        $products = $query->orderBy('order_items_count', 'desc')->take(10)->get();
+        $products = $query->get()->map(function ($product) {
+            $product->total_sales = $product->orderItems->sum(function ($orderItem) {
+                return $orderItem->quantity * $orderItem->price;
+            });
+            return $product;
+        })->sortByDesc('total_sales')->take(10);
+
         $productNames = $products->pluck('name');
-        $orderCounts = $products->pluck('order_items_count');
+        $totalSales = $products->pluck('total_sales');
         $lowStockProducts = Product::where('stock', '<', 20)->get();
 
-        return view('home', compact('products', 'productNames', 'orderCounts', 'lowStockProducts'));
+        return view('home', compact('products', 'productNames', 'totalSales', 'lowStockProducts'));
     }
 
 

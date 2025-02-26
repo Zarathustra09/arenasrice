@@ -67,14 +67,18 @@ class OrderController extends Controller
     public function downloadOrder($id)
     {
         $order = Order::with('orderItems.product')->findOrFail($id);
-        $pdf = Pdf::loadView('pdf.order', compact('order'));
+        $customPaper = array(0, 0, 360, 720); // Adjusted height to fit the content
+        $pdf = Pdf::loadView('pdf.order', compact('order'))->setPaper($customPaper)->setOptions(['defaultFont' => 'DejaVu Sans']);
         return $pdf->download('order_' . $order->id . '.pdf');
     }
 
 
     public function orederListIndex()
     {
-        $orders = Order::where('user_id', Auth::id())->with('orderItems.product')->get();
+        $orders = Order::where('user_id', Auth::id())
+            ->with('orderItems.product')
+            ->orderBy('created_at', 'desc') // Order by created_at in descending order
+            ->get();
         return view('guest.order.list', compact('orders'));
     }
 }

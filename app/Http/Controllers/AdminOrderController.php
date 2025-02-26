@@ -24,6 +24,7 @@ class AdminOrderController extends Controller
                     $query->where('name', 'like', "%{$search}%");
                 });
             })
+            ->orderBy('created_at', 'desc') // Order by created_at in descending order
             ->get();
 
         $data = $orders->map(function($order) {

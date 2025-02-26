@@ -9,7 +9,7 @@ class LogController extends Controller
 {
     public function index()
     {
-        $logs = Activity::all()->map(function ($log) {
+        $logs = Activity::orderBy('created_at', 'desc')->get()->map(function ($log) {
             if (class_exists($log->subject_type)) {
                 $log->subject = $log->subject_type::find($log->subject_id);
             }

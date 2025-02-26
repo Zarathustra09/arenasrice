@@ -21,7 +21,10 @@ class ContactController extends Controller
             'message' => 'required|string',
         ]);
 
-        Mail::to('your-email@example.com')->send(new ContactFormMail($details));
+        Mail::to('terrenalkimlester@gmail.com')->send(new ContactFormMail($details));
+
+        // Send email to the .env sender
+        Mail::to(env('MAIL_FROM_ADDRESS'))->send(new ContactFormMail($details));
 
         return back()->with('success', 'Your message has been sent successfully!');
     }

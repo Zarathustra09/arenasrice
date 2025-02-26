@@ -12,7 +12,6 @@
                     <tr>
                         <th>Order ID</th>
                         <th>User</th>
-                        <th>Products</th>
                         <th>Item Name</th>
                         <th>Price</th>
                         <th>Quantity</th>
@@ -40,9 +39,6 @@
                     { data: 'id', name: 'id' },
                     { data: 'user', name: 'user' },
                     { data: 'orderItems', name: 'orderItems', render: function(data) {
-                            return data.map(item => `<img src="${item.product.image}" class="img-fluid me-5 rounded-circle" style="width: 80px; height: 80px;" alt="${item.product.name}">`).join('');
-                        }},
-                    { data: 'orderItems', name: 'orderItems', render: function(data) {
                             return data.map(item => item.product.name).join('<br>');
                         }},
                     { data: 'orderItems', name: 'orderItems', render: function(data) {
@@ -52,7 +48,8 @@
                             return data.map(item => item.quantity).join('<br>');
                         }},
                     { data: 'orderItems', name: 'orderItems', render: function(data) {
-                            return data.map(item => `₱${item.price * item.quantity}`).join('<br>');
+                            let total = data.reduce((sum, item) => sum + (item.price * item.quantity), 0);
+                            return `₱${total}`;
                         }},
                     { data: 'status', name: 'status' },
                     { data: 'id', name: 'actions', orderable: false, searchable: false, render: function(data, type, row) {
@@ -62,9 +59,9 @@
                             } else {
                                 buttons += `<a href="#" class="btn btn-primary btn-sm editOrderBtn" data-id="${data}">Edit</a>`;
                             }
-                            buttons += `<a href="{{ url('admin/orders') }}/${data}/download" class="btn btn-success btn-sm ms-2">Download</a>`;
+                            buttons += `<a href="{{ url('admin/orders') }}/${data}/download" class="btn btn-success btn-sm ms-2">Print</a>`;
                             return buttons;
-                        }}
+                        }},
                 ],
                 order: [[0, 'desc']],
                 search: {
