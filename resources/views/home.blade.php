@@ -28,6 +28,7 @@
                     <hr>
                     <div class="text-center">
                         <h6 class="m-0 font-weight-bold text-primary">Total Sales: ₱{{ number_format($totalSalesSum, 2) }}</h6>
+                        <h6 class="m-0 font-weight-bold text-primary">Today's Sale: ₱{{ number_format($todaysSales, 2) }}</h6>
                     </div>
                 </div>
             </div>

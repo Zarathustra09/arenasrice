@@ -10,6 +10,7 @@ use App\Http\Controllers\IngredientController;
 use App\Http\Controllers\LandingPageController;
 use App\Http\Controllers\LogController;
 use App\Http\Controllers\OrderController;
+use App\Http\Controllers\PosController;
 use App\Http\Controllers\ProductController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\ShopController;
@@ -103,3 +104,7 @@ Route::get('guest/order/list', [OrderController::class, 'orederListIndex'])->nam
 
 Route::get('/guest/profile', [ProfileController::class, 'guestIndex'])->name('guest.profile.index');
 Route::post('/guest/profile', [ProfileController::class, 'guestUpdate'])->name('guest.profile.update');
+
+
+Route::get('/staff/pos/index', [PosController::class, 'index'])->name('pos.index');
+Route::post('/staff/pos/saveOrder', [PosController::class, 'saveOrder'])->name('pos.saveOrder');

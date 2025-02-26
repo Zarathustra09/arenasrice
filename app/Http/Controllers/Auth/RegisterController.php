@@ -37,6 +37,8 @@ class RegisterController extends Controller
                 return '/';
             case 1:
                 return '/home';
+            case 2:
+                return '/staff/pos/index';
             default:
                 return '/';
         }

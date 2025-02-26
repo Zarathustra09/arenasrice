@@ -25,7 +25,21 @@ class ConfirmPasswordController extends Controller
      *
      * @var string
      */
-    protected $redirectTo = '/home';
+    protected function redirectTo()
+    {
+        $role = auth()->user()->role;
+
+        switch ($role) {
+            case 0:
+                return '/';
+            case 1:
+                return '/home';
+            case 2:
+                return '/staff/pos/index';
+            default:
+                return '/';
+        }
+    }
 
     /**
      * Create a new controller instance.

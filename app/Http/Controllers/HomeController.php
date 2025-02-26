@@ -43,6 +43,14 @@ class HomeController extends Controller
             return $product;
         })->sortByDesc('total_sales')->take(10);
 
+        $todaysSales = Product::whereHas('orderItems', function ($query) {
+            $query->whereDate('created_at', today());
+        })->get()->sum(function ($product) {
+            return $product->orderItems->sum(function ($orderItem) {
+                return $orderItem->quantity * $orderItem->price;
+            });
+        });
+
         $productNames = $products->pluck('name');
         $totalSales = $products->pluck('total_sales');
         $totalSalesSum = $totalSales->sum(); // Calculate the total sales sum
@@ -50,6 +58,6 @@ class HomeController extends Controller
         $lowStockProducts = Product::whereColumn('stock', '<', 'low_stock_threshold')->get();
         $lowStockIngredients = Ingredient::whereColumn('stock', '<', 'low_stock_threshold')->get();
 
-        return view('home', compact('products', 'productNames', 'totalSales', 'totalSalesSum', 'lowStockProducts', 'lowStockIngredients'));
+        return view('home', compact('products', 'productNames', 'totalSales', 'totalSalesSum', 'lowStockProducts', 'lowStockIngredients', 'todaysSales'));
     }
 }

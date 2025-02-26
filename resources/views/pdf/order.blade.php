@@ -51,16 +51,38 @@
 <body>
 <h1>Order #{{ $order->id }}</h1>
 <div class="summary">
-    <p>User: {{ $order->user->name }}</p>
-    <p>Status: {{ $order->status }}</p>
-    <p>Order Generated At: {{ $order->created_at->format('M j, Y g:i A') }}</p>
+    @if($order->user)
+        <p>User: {{ $order->user->name }}</p>
+    @endif
+    @if($order->status)
+        <p>Status: {{ $order->status }}</p>
+    @endif
+    @if($order->created_at)
+        <p>Order Generated At: {{ $order->created_at->format('M j, Y g:i A') }}</p>
+    @endif
 </div>
 <h2>Billing</h2>
-<p>{{ $order->billing_name }}</p>
-<p>{{ $order->billing_address }}</p>
-<p>{{ $order->billing_city }}, {{ $order->billing_state }} {{ $order->billing_zip }}</p>
-<p>Phone: {{ $order->billing_phone }}</p>
-<p>Email: {{ $order->billing_email }}</p>
+@if($order->billing_name)
+    <p>{{ $order->billing_name }}</p>
+@endif
+@if($order->billing_address)
+    <p>{{ $order->billing_address }}</p>
+@endif
+@if($order->billing_city || $order->billing_state || $order->billing_zip)
+    <p>
+        @if($order->billing_city){{ $order->billing_city }}@endif
+        @if($order->billing_city && $order->billing_state), @endif
+        @if($order->billing_state){{ $order->billing_state }}@endif
+        @if(($order->billing_city || $order->billing_state) && $order->billing_zip) @endif
+        @if($order->billing_zip){{ $order->billing_zip }}@endif
+    </p>
+@endif
+@if($order->billing_phone)
+    <p>Phone: {{ $order->billing_phone }}</p>
+@endif
+@if($order->billing_email)
+    <p>Email: {{ $order->billing_email }}</p>
+@endif
 <h2>Items</h2>
 <table>
     <thead>
@@ -72,16 +94,18 @@
     </thead>
     <tbody>
     @foreach($order->orderItems as $item)
-        <tr>
-            <td>{{ $item->product->name }}</td>
-            <td>{{ $item->quantity }}</td>
-            <td>₱{{ number_format($item->price, 2) }}</td>
-        </tr>
+        @if($item && $item->product)
+            <tr>
+                <td>{{ $item->product->name }}</td>
+                <td>{{ $item->quantity }}</td>
+                <td>₱{{ number_format($item->price, 2) }}</td>
+            </tr>
+        @endif
     @endforeach
     </tbody>
 </table>
 <div class="grand-total">
-    <p>Grand Total: ₱{{ number_format($order->orderItems->sum(fn($item) => $item->price * $item->quantity), 2) }}</p>
+    <p>Grand Total: ₱{{ number_format($order->orderItems->sum(fn($item) => $item && $item->price ? $item->price * ($item->quantity ?? 1) : 0), 2) }}</p>
 </div>
 </body>
 </html>

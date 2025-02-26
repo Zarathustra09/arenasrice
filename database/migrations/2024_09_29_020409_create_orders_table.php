@@ -13,16 +13,16 @@ return new class extends Migration
     {
         Schema::create('orders', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('user_id')->constrained()->onDelete('cascade'); // Link to users table
+            $table->foreignId('user_id')->nullable()->constrained()->onDelete('cascade'); // Link to users table
             $table->decimal('total_amount', 10, 2);
             $table->enum('status', ['pending', 'processing', 'shipped', 'delivered', 'canceled'])->default('pending');
-            $table->string('billing_name');
-            $table->string('billing_address');
-            $table->string('billing_city');
-            $table->string('billing_state');
-            $table->string('billing_zip');
-            $table->string('billing_phone');
-            $table->string('billing_email');
+            $table->string('billing_name')->nullable();
+            $table->string('billing_address')->nullable();
+            $table->string('billing_city')->nullable();
+            $table->string('billing_state')->nullable();
+            $table->string('billing_zip')->nullable();
+            $table->string('billing_phone')->nullable();
+            $table->string('billing_email')->nullable();
             $table->timestamps();
         });
     }
