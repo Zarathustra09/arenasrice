@@ -73,6 +73,7 @@ Route::group(['middleware' => ['auth', 'role:1']], function () {
     Route::delete('/admin/ingredients/{id}', [IngredientController::class, 'destroy'])->name('ingredients.destroy');
 
     Route::get('/admin/logs', [LogController::class, 'index'])->name('admin.logs.index');
+    Route::get('/api/logs', [LogController::class, 'getLogs']);
 
     Route::get('/admin/accounts', [AccountController::class, 'index'])->name('admin.accounts.index');
     Route::get('/admin/accounts/data', [AccountController::class, 'data'])->name('admin.accounts.data');
@@ -108,3 +109,4 @@ Route::post('/guest/profile', [ProfileController::class, 'guestUpdate'])->name('
 
 Route::get('/staff/pos/index', [PosController::class, 'index'])->name('pos.index');
 Route::post('/staff/pos/saveOrder', [PosController::class, 'saveOrder'])->name('pos.saveOrder');
+Route::get('/pos/orders', [PosController::class, 'getOrders'])->name('pos.getOrders');

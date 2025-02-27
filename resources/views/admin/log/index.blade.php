@@ -10,6 +10,7 @@
                 <table class="table table-bordered" id="activityLogsTable" width="100%" cellspacing="0">
                     <thead>
                     <tr>
+                        <th>Id</th>
                         <th>Event</th>
                         <th>Subject</th>
                         <th>Caused By</th>
@@ -18,36 +19,6 @@
                     </tr>
                     </thead>
                     <tbody>
-                    @foreach($logs as $log)
-                        <tr>
-                            <td>
-                                <span class="badge badge-{{ $log->event === 'created' ? 'success' : ($log->event === 'updated' ? 'warning' : 'secondary') }}">
-                                    {{ ucfirst($log->event) }}
-                                </span>
-                            </td>
-                            <td>
-                                @if($log->subject_type == 'App\Models\Product')
-                                    <strong>{{ $log->subject ? $log->subject->name : 'N/A' }}</strong>
-                                    <small class="d-block text-muted">Product</small>
-                                @elseif($log->subject_type == 'App\Models\Ingredient')
-                                    <strong>{{ $log->subject ? $log->subject->name : 'N/A' }}</strong>
-                                    <small class="d-block text-muted">Ingredient</small>
-                                @else
-                                    <strong>{{ $log->subject ? $log->subject->name : 'N/A' }}</strong>
-                                    <small class="d-block text-muted">{{ class_basename($log->subject_type) }}</small>
-                                @endif
-                            </td>
-                            <td>
-                                {{ $log->causer ? $log->causer->name : 'System' }}
-                            </td>
-                            <td>
-                                <button class="btn btn-sm btn-info" onclick="viewLogProperties({{ json_encode($log->properties) }})">
-                                    View Properties
-                                </button>
-                            </td>
-                            <td>{{ $log->created_at }}</td>
-                        </tr>
-                    @endforeach
                     </tbody>
                 </table>
             </div>
@@ -58,9 +29,42 @@
 @push('scripts')
     <script src="https://cdn.datatables.net/1.11.5/js/jquery.dataTables.min.js"></script>
     <script src="https://cdn.datatables.net/1.11.5/js/dataTables.bootstrap4.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.29.1/moment.min.js"></script>
     <script>
         $(document).ready(function() {
-            $('#activityLogsTable').DataTable();
+            $('#activityLogsTable').DataTable({
+                processing: true,
+                serverSide: true,
+                ajax: {
+                    url: '/api/logs',
+                    type: 'GET',
+                    dataSrc: 'data'
+                },
+                columns: [
+                    { data: 'id', name: 'id' },
+                    { data: 'event', name: 'event', render: function(data, type, row) {
+                            return `<span class="badge badge-${data === 'created' ? 'success' : (data === 'updated' ? 'warning' : 'secondary')}">${data.charAt(0).toUpperCase() + data.slice(1)}</span>`;
+                        }},
+                    { data: 'subject', name: 'subject', render: function(data, type, row) {
+                            if (row.subject_type === 'App\\Models\\Product') {
+                                return `<strong>${data ? data.name : 'N/A'}</strong><small class="d-block text-muted">Product</small>`;
+                            } else if (row.subject_type === 'App\\Models\\Ingredient') {
+                                return `<strong>${data ? data.name : 'N/A'}</strong><small class="d-block text-muted">Ingredient</small>`;
+                            } else {
+                                return `<strong>${data ? data.name : 'N/A'}</strong><small class="d-block text-muted">${row.subject_type.split('\\').pop()}</small>`;
+                            }
+                        }},
+                    { data: 'causer', name: 'causer', render: function(data, type, row) {
+                            return data ? data.name : 'System';
+                        }},
+                    { data: 'properties', name: 'properties', render: function(data, type, row) {
+                            return `<button class="btn btn-sm btn-info" onclick="viewLogProperties(${JSON.stringify(data).replace(/"/g, '&quot;')})">View Properties</button>`;
+                        }},
+                    { data: 'created_at', name: 'created_at', render: function(data, type, row) {
+                            return moment(data).format('MMMM DD YYYY HH:mm');
+                        }}
+                ]
+            });
         });
 
         function viewLogProperties(properties) {

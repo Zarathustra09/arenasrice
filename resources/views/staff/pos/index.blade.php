@@ -102,14 +102,7 @@
                             </tr>
                             </thead>
                             <tbody>
-                            @foreach($orders as $order)
-                                <tr>
-                                    <td>{{ $order->id }}</td>
-                                    <td>{{ $order->total_amount }}</td>
-                                    <td>{{ $order->status }}</td>
-                                    <td><a href="{{ url('admin/orders') }}/{{ $order->id }}/download" class="btn btn-success btn-sm">Print</a></td>
-                                </tr>
-                            @endforeach
+
                             </tbody>
                         </table>
                     </div>
@@ -122,7 +115,24 @@
 @push('scripts')
     <script>
         $(document).ready(function() {
-            $('#orders-table').DataTable();
+            $('#orders-table').DataTable({
+                ajax: {
+                    url: '{{ route('pos.getOrders') }}',
+                    dataSrc: 'orders'
+                },
+                columns: [
+                    { data: 'id' },
+                    { data: 'total_amount' },
+                    { data: 'status' },
+                    {
+                        data: 'id',
+                        render: function(data, type, row) {
+                            return `<a href="{{ url('admin/orders') }}/${data}/download" class="btn btn-success btn-sm">Print</a>`;
+                        }
+                    }
+                ],
+                order: [[0, 'desc']] // Ensure the table is ordered by the first column (id) in descending order
+            });
         });
 
         document.addEventListener('DOMContentLoaded', function() {

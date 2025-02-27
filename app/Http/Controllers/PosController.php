@@ -13,8 +13,13 @@ class PosController extends Controller
     public function index()
     {
         $products = Product::all();
-        $orders = Order::whereNull('user_id')->get();
-        return view('staff.pos.index', compact('products', 'orders'));
+        return view('staff.pos.index', compact('products'));
+    }
+
+    public function getOrders()
+    {
+        $orders = Order::whereNull('user_id')->orderBy('id', 'desc')->get();
+        return response()->json(['orders' => $orders]);
     }
 
     public function saveOrder(Request $request)
