@@ -1,10 +1,11 @@
 <ul class="navbar-nav sidebar sidebar-dark accordion" id="accordionSidebar" style="background-color: #9B734F;">
 
 <a class="sidebar-brand d-flex align-items-center justify-content-center" href="{{ route('home') }}">
-        <div class="sidebar-brand-icon rotate-n-15">
+        <div class="sidebar-brand-icon">
 {{--            <i class="fas fa-utensils"></i>--}}
+
         </div>
-        <div class="sidebar-brand-text mx-3">{{env('APP_NAME')}}<sup></sup></div>
+        <div class="sidebar-brand-text mx-3"><img src="{{ asset('logoedited.png') }}" alt="Logo" height="200px" width="auto" class="mt-3" ><sup></sup></div>
     </a>
 
     <hr class="sidebar-divider my-0">

@@ -18,7 +18,17 @@
     <!-- Fonts -->
     <link rel="dns-prefetch" href="//fonts.bunny.net">
     <link href="https://fonts.bunny.net/css?family=Nunito" rel="stylesheet">
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Satisfy&display=swap');
 
+        .bakery-title {
+            font-family: 'Satisfy', cursive;
+            color: #8B4513; /* Brown color similar to the logo */
+            font-size: 2rem;
+            margin-bottom: 0;
+            font-weight: bold;
+        }
+    </style>
     <!-- Scripts -->
     @vite(['resources/sass/app.scss', 'resources/js/app.js'])
 </head>
@@ -35,9 +45,10 @@
         <!-- Main Content -->
         <div id="content">
 
+
             <!-- Topbar -->
             <nav class="navbar navbar-expand navbar-light bg-white topbar mb-4 static-top shadow">
-
+                <h1 class="bakery-title mx-5">{{env('APP_NAME')}}</h1>
                 <!-- Sidebar Toggle (Topbar) -->
                 <button id="sidebarToggleTop" class="btn btn-link d-md-none rounded-circle mr-3">
                     <i class="fa fa-bars"></i>
@@ -48,11 +59,7 @@
                 <!-- Topbar Navbar -->
                 <ul class="navbar-nav ml-auto">
                     <!-- Logo added in the middle -->
-                    <li class="nav-item mx-auto">
-                        <a class="nav-link" href="#">
-                            <img src="{{ asset('logoedited.png') }}" alt="Logo" height="200px" width="auto" class="pt-3">
-                        </a>
-                    </li>
+
 
                     <div class="topbar-divider d-none d-sm-block"></div>
 
