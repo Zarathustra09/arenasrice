@@ -30,7 +30,7 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-Route::get('/', [LandingPageController::class, 'index'])->name('landing-page');
+Route::get('/', [LandingPageController::class, 'index'])->name('landing-page')->middleware('redirect.home');
 
 Auth::routes();
 
