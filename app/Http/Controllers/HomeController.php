@@ -54,8 +54,10 @@ class HomeController extends Controller
 
 
         $monthlyEarnings = Order::whereMonth('created_at', now()->month)
+            ->where('status', '!=', 'canceled')
             ->sum('total_amount');
         $annualEarnings = Order::whereYear('created_at', now()->year)
+            ->where('status', '!=', 'canceled')
             ->sum('total_amount');
         $pendingOrders = Order::where('status', 'pending')->count();
 
