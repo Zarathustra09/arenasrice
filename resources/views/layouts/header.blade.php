@@ -45,6 +45,12 @@
             <span>Ingredients</span></a>
     </li>
 
+    <li class="nav-item {{ Request::routeIs('product-containers.index') ? 'active' : '' }}">
+        <a class="nav-link" href="{{ route('product-containers.index') }}">
+            <i class="fas fa-fw fa-archive"></i>
+            <span>Materials</span></a>
+    </li>
+
     <hr class="sidebar-divider">
 
     <div class="sidebar-heading">
