@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Category;
 use App\Models\Product;
+use App\Models\ProductContainer;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
 
@@ -11,31 +12,20 @@ class ProductController extends Controller
 {
     public function index()
     {
-        return view('admin.product.index');
+        $categories = Category::all();
+        $containers = ProductContainer::all();
+        $products = Product::all();
+        return view('admin.product.index', compact('categories', 'containers', 'products'));
     }
 
-    public function dataTable()
-    {
-        $search = request()->input('search.value');
-        $products = Product::with('category')
-            ->when($search, function ($query, $search) {
-                return $query->where('name', 'like', "%{$search}%")
-                    ->orWhere('description', 'like', "%{$search}%")
-                    ->orWhereHas('category', function ($query) use ($search) {
-                        $query->where('name', 'like', "%{$search}%");
-                    });
-            })
-            ->get();
-
-        return response()->json([
-            'draw' => intval(request()->input('draw')),
-            'recordsTotal' => $products->count(),
-            'recordsFiltered' => $products->count(),
-            'data' => $products
-        ]);
-    }
-
-    // File: app/Http/Controllers/ProductController.php
+//    public function dataTable()
+//    {
+//        $products = Product::with('category', 'containers')->get();
+//
+//        return response()->json([
+//            'data' => $products
+//        ]);
+//    }
 
     public function store(Request $request)
     {
@@ -45,8 +35,9 @@ class ProductController extends Controller
             'description' => 'nullable|string',
             'price' => 'required|numeric',
             'stock' => 'required|integer',
-            'low_stock_threshold' => 'required|integer', // Add this line
-            'image' => 'nullable|image'
+            'low_stock_threshold' => 'required|integer',
+            'image' => 'nullable|image',
+            'container_id' => 'nullable|exists:product_containers,id'
         ]);
 
         try {
@@ -71,8 +62,9 @@ class ProductController extends Controller
             'description' => 'nullable|string',
             'price' => 'required|numeric',
             'stock' => 'required|integer',
-            'low_stock_threshold' => 'required|integer', // Add this line
-            'image' => 'nullable|image'
+            'low_stock_threshold' => 'required|integer',
+            'image' => 'nullable|image',
+            'container_id' => 'nullable|exists:product_containers,id'
         ]);
 
         try {
@@ -82,20 +74,22 @@ class ProductController extends Controller
                 $data['image'] = $request->file('image')->store('images', 'public');
             }
             $product->update($data);
-            Log::info('Product has been added: ' . $product);
+            Log::info('Product has been updated: ' . $product);
             return response()->json(['message' => 'Product has been updated.'], 200);
         } catch (\Exception $e) {
+            Log::error('Error updating product: ' . $e->getMessage());
             return response()->json(['message' => 'An error occurred while updating the product.'], 500);
         }
     }
 
-
     public function show(string $id)
     {
         try {
-            $product = Product::with('category')->find($id);
+            $product = Product::with('category', 'container')->findOrFail($id);
+
             return response()->json(['data' => $product]);
         } catch (\Exception $e) {
+            Log::error('Error retrieving product: ' . $e->getMessage());
             return response()->json(['message' => 'An error occurred while retrieving the product.'], 500);
         }
     }
@@ -110,27 +104,16 @@ class ProductController extends Controller
         }
     }
 
-
-
     public function destroy(string $id)
     {
         try {
-            $product = Product::find($id);
+            $product = Product::findOrFail($id);
             $product->delete();
-
+            Log::info('Product has been deleted: ' . $product);
             return response()->json(['message' => 'Product has been deleted.'], 200);
         } catch (\Exception $e) {
+            Log::error('Error deleting product: ' . $e->getMessage());
             return response()->json(['message' => 'An error occurred while deleting the product.'], 500);
-        }
-    }
-
-    public function getCategories()
-    {
-        try {
-            $categories = Category::all();
-            return response()->json(['data' => $categories]);
-        } catch (\Exception $e) {
-            return response()->json(['message' => 'An error occurred while fetching categories.'], 500);
         }
     }
 }

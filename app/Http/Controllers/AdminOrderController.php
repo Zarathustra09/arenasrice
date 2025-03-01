@@ -2,8 +2,12 @@
 
 namespace App\Http\Controllers;
 
+use App\Mail\LowStockNotification;
+use App\Mail\OrderDeliveredNotification;
 use App\Models\Order;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Storage;
 
 class AdminOrderController extends Controller
@@ -70,6 +74,34 @@ class AdminOrderController extends Controller
                 $product = $item->product;
                 $product->increment('stock', $item->quantity);
             }
+        }
+
+        // If the order is being delivered, deduct the stock from the product containers
+        if ($newStatus === 'delivered' && $order->status !== 'delivered') {
+            $lowStockContainers = [];
+            foreach ($order->orderItems as $item) {
+                $container = $item->product->container;
+                if ($container) {
+                    if ($container->quantity >= $item->quantity) {
+                        $container->decrement('quantity', $item->quantity);
+                        if ($container->quantity <= $container->low_stock_threshold) {
+                            $lowStockContainers[] = $container;
+                        }
+                    } else {
+                        $lowStockContainers[] = $container;
+                    }
+                }
+            }
+
+            Log::info('Low stock containers: ' . json_encode($lowStockContainers));
+
+            // Send low stock notification email
+            if (!empty($lowStockContainers)) {
+                Mail::to(env('KIM_MAIL'))->send(new LowStockNotification($lowStockContainers));
+            }
+
+            // Send order delivered notification email to the user
+            Mail::to($order->user->email)->send(new OrderDeliveredNotification($order));
         }
 
         $order->status = $newStatus;

@@ -11,6 +11,7 @@ use App\Http\Controllers\LandingPageController;
 use App\Http\Controllers\LogController;
 use App\Http\Controllers\OrderController;
 use App\Http\Controllers\PosController;
+use App\Http\Controllers\ProductContainerController;
 use App\Http\Controllers\ProductController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\ShopController;
@@ -83,6 +84,9 @@ Route::group(['middleware' => ['auth', 'role:1']], function () {
     Route::delete('/admin/accounts/{id}', [AccountController::class, 'destroy']);
 
     Route::get('products/lowStockData', [HomeController::class, 'lowStockData'])->name('products.lowStockData');
+
+
+    Route::resource('product-containers', ProductContainerController::class);
 
 
 });

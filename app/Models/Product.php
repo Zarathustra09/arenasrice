@@ -11,12 +11,18 @@ class Product extends Model
 {
     use HasFactory, LogsActivity;
 
-    protected $fillable = ['category_id', 'name', 'description', 'price', 'stock', 'image', 'low_stock_threshold'];
+    protected $fillable = ['category_id', 'container_id', 'name', 'description', 'price', 'stock', 'image', 'low_stock_threshold'];
 
     // Relationship: A product belongs to a category
     public function category()
     {
         return $this->belongsTo(Category::class);
+    }
+
+    // Relationship: A product belongs to a container
+    public function container()
+    {
+        return $this->belongsTo(ProductContainer::class);
     }
 
     // Relationship: One product can have many order items
@@ -29,7 +35,7 @@ class Product extends Model
     public function getActivitylogOptions(): LogOptions
     {
         return LogOptions::defaults()
-            ->logOnly(['category_id', 'name', 'description', 'price', 'stock', 'image'])
+            ->logOnly(['category_id', 'container_id', 'name', 'description', 'price', 'stock', 'image'])
             ->useLogName('product')
             ->logOnlyDirty();
     }
