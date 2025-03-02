@@ -79,6 +79,8 @@ class HomeController extends Controller
             $query->whereColumn('stock', '<', 'low_stock_threshold');
         })->get();
 
+
+
         return view('home', compact(
             'products', 'productNames', 'totalSales', 'totalSalesSum', 'lowStockProducts', 'lowStockIngredients',
             'todaysSales', 'monthlyEarnings', 'annualEarnings', 'pendingOrders',
