@@ -56,6 +56,60 @@
                 </div>
             </div>
         </div>
+
+        <!-- Low Stock Products Card -->
+        <div class="col-xl-4 col-md-6 mb-4">
+            <div class="card border-left-warning shadow h-100 py-2" onclick="scrollToTable('lowStockProductsTable')">
+                <div class="card-body">
+                    <div class="row no-gutters align-items-center">
+                        <div class="col mr-2">
+                            <div class="text-xs font-weight-bold text-warning text-uppercase mb-1">
+                                Low Stock Products</div>
+                            <div class="h5 mb-0 font-weight-bold text-gray-800">{{ $lowStockProductsCount }}</div>
+                        </div>
+                        <div class="col-auto">
+                            <i class="fas fa-box-open fa-2x text-gray-300"></i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Low Stock Ingredients Card -->
+        <div class="col-xl-4 col-md-6 mb-4">
+            <div class="card border-left-warning shadow h-100 py-2" onclick="scrollToTable('lowStockIngredientsTable')">
+                <div class="card-body">
+                    <div class="row no-gutters align-items-center">
+                        <div class="col mr-2">
+                            <div class="text-xs font-weight-bold text-warning text-uppercase mb-1">
+                                Low Stock Ingredients</div>
+                            <div class="h5 mb-0 font-weight-bold text-gray-800">{{ $lowStockIngredientsCount }}</div>
+                        </div>
+                        <div class="col-auto">
+                            <i class="fas fa-mortar-pestle fa-2x text-gray-300"></i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Low Stock Materials Card -->
+        <div class="col-xl-4 col-md-6 mb-4">
+            <div class="card border-left-warning shadow h-100 py-2" onclick="scrollToTable('lowStockContainersTable')">
+                <div class="card-body">
+                    <div class="row no-gutters align-items-center">
+                        <div class="col mr-2">
+                            <div class="text-xs font-weight-bold text-warning text-uppercase mb-1">
+                                Low Stock Materials</div>
+                            <div class="h5 mb-0 font-weight-bold text-gray-800">{{ $lowStockContainersCount }}</div>
+                        </div>
+                        <div class="col-auto">
+                            <i class="fas fa-shopping-bag fa-2x text-gray-300"></i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
     </div>
 
 
@@ -93,6 +147,9 @@
         </div>
     </div>
 
+
+
+    <!-- Low Stock Products Table -->
     <div class="card shadow mb-4">
         <div class="card-header py-3">
             <h6 class="m-0 font-weight-bold text-primary">Low Stock Products</h6>
@@ -131,6 +188,7 @@
         </div>
     </div>
 
+    <!-- Low Stock Ingredients Table -->
     <div class="card shadow mb-4">
         <div class="card-header py-3">
             <h6 class="m-0 font-weight-bold text-primary">Low Stock Ingredients</h6>
@@ -168,6 +226,45 @@
             </div>
         </div>
     </div>
+
+    <!-- Low Stock Materials Table -->
+    <div class="card shadow mb-4">
+        <div class="card-header py-3">
+            <h6 class="m-0 font-weight-bold text-primary">Low Stock Materials</h6>
+        </div>
+        <div class="card-body">
+            <div class="table-responsive">
+                <table class="table table-bordered" id="lowStockContainersTable" width="100%" cellspacing="0">
+                    <thead>
+                    <tr>
+                        <th>ID</th>
+                        <th>Name</th>
+                        <th>Quantity</th>
+                        <th>Status</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    @foreach($lowStockContainers as $container)
+                        <tr>
+                            <td>{{ $container->id }}</td>
+                            <td>{{ $container->name }}</td>
+                            <td>{{ $container->quantity }}</td>
+                            <td>
+                                @if($container->quantity == 0)
+                                    <span class="badge bg-danger">No Stock</span>
+                                @elseif($container->quantity < $container->low_stock_threshold)
+                                    <span class="badge bg-warning text-dark">Low Stock</span>
+                                @else
+                                    <span class="badge bg-success">In Stock</span>
+                                @endif
+                            </td>
+                        </tr>
+                    @endforeach
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
 @endsection
 
 @push('scripts')
@@ -175,7 +272,12 @@
         $(document).ready(function() {
             $('#lowStockProductsTable').DataTable();
             $('#lowStockIngredientsTable').DataTable();
+            $('#lowStockContainersTable').DataTable();
         });
+
+        function scrollToTable(tableId) {
+            document.getElementById(tableId).scrollIntoView({ behavior: 'smooth' });
+        }
 
         function toggleCustomDateFields(value) {
             if (value === 'custom') {

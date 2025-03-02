@@ -13,7 +13,13 @@ class PosController extends Controller
     public function index()
     {
         $products = Product::all();
-        return view('staff.pos.index', compact('products'));
+        $orders = Order::whereNull('user_id')->get();
+
+        $monthlyEarnings = $orders->whereBetween('created_at', [now()->startOfMonth(), now()])->sum('total_amount');
+        $annualEarnings = $orders->whereBetween('created_at', [now()->startOfYear(), now()])->sum('total_amount');
+        $deliveredOrders = $orders->where('status', 'delivered')->count();
+
+        return view('staff.pos.index', compact('products', 'monthlyEarnings', 'annualEarnings', 'deliveredOrders'));
     }
 
     public function getOrders()

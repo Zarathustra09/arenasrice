@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Order;
+use App\Models\ProductContainer;
 use Illuminate\Http\Request;
 use App\Models\Product;
 use App\Models\Ingredient;
@@ -68,6 +69,20 @@ class HomeController extends Controller
         $lowStockProducts = Product::whereColumn('stock', '<', 'low_stock_threshold')->get();
         $lowStockIngredients = Ingredient::whereColumn('stock', '<', 'low_stock_threshold')->get();
 
-        return view('home', compact('products', 'productNames', 'totalSales', 'totalSalesSum', 'lowStockProducts', 'lowStockIngredients', 'todaysSales','monthlyEarnings', 'annualEarnings', 'pendingOrders'));
+        $lowStockProductsCount = Product::whereColumn('stock', '<', 'low_stock_threshold')->count();
+        $lowStockIngredientsCount = Ingredient::whereColumn('stock', '<', 'low_stock_threshold')->count();
+        $lowStockContainersCount = ProductContainer::whereHas('products', function ($query) {
+            $query->whereColumn('stock', '<', 'low_stock_threshold');
+        })->count();
+
+        $lowStockContainers = ProductContainer::whereHas('products', function ($query) {
+            $query->whereColumn('stock', '<', 'low_stock_threshold');
+        })->get();
+
+        return view('home', compact(
+            'products', 'productNames', 'totalSales', 'totalSalesSum', 'lowStockProducts', 'lowStockIngredients',
+            'todaysSales', 'monthlyEarnings', 'annualEarnings', 'pendingOrders',
+            'lowStockProductsCount', 'lowStockIngredientsCount', 'lowStockContainersCount', 'lowStockContainers'
+        ));
     }
 }

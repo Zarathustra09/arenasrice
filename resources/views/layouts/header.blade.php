@@ -1,14 +1,16 @@
 <ul class="navbar-nav sidebar sidebar-dark accordion" id="accordionSidebar" style="background-color: #9B734F;">
 
-<a class="sidebar-brand d-flex align-items-center justify-content-center" href="{{ route('home') }}">
+    <a class="sidebar-brand d-flex align-items-center justify-content-center"
+       style="background-color: white; border: 1px solid #9B734F;"
+       href="{{ route('home') }}">
         <div class="sidebar-brand-icon">
-{{--            <i class="fas fa-utensils"></i>--}}
-
         </div>
-        <div class="sidebar-brand-text mx-3"><img src="{{ asset('logoedited.png') }}" alt="Logo" height="200px" width="auto" class="mt-3" ><sup></sup></div>
+        <div class="sidebar-brand-text mx-3">
+            <img src="{{ asset('logoedited.png') }}" alt="Logo" height="200px" width="auto" class="mt-3">
+            <sup></sup>
+        </div>
     </a>
 
-    <hr class="sidebar-divider my-0">
 
     <li class="nav-item {{ Request::routeIs('home') ? 'active' : '' }}">
         <a class="nav-link" href="{{ route('home') }}">
@@ -17,7 +19,16 @@
     </li>
 
     <hr class="sidebar-divider">
+    <div class="sidebar-heading">
+        Point of Sale
+    </div>
 
+    <li class="nav-item {{ Request::routeIs('pos.index') ? 'active' : '' }}">
+        <a class="nav-link" href="{{route('pos.index')}}">
+            <i class="fas fa-fw fa-money-bill"></i>
+            <span>POS</span></a>
+    </li>
+    <hr class="sidebar-divider">
     <div class="sidebar-heading">
         Product Management
     </div>
@@ -74,6 +85,8 @@
             <i class="fas fa-fw fa-receipt"></i>
             <span>Orders</span></a>
     </li>
+
+
 
     <hr class="sidebar-divider d-none d-md-block">
 
