@@ -15,7 +15,6 @@ class HomeController extends Controller
         $this->middleware('auth');
     }
 
-    // File: app/Http/Controllers/HomeController.php
 
     public function index(Request $request)
     {
@@ -36,6 +35,9 @@ class HomeController extends Controller
                         break;
                 }
             }
+            $query->whereHas('order', function ($query) {
+                $query->where('status', '!=', 'canceled');
+            });
         }]);
 
         $products = $query->get()->map(function ($product) {
@@ -46,13 +48,15 @@ class HomeController extends Controller
         })->sortByDesc('total_sales')->take(10);
 
         $todaysSales = Product::whereHas('orderItems', function ($query) {
-            $query->whereDate('created_at', today());
+            $query->whereDate('created_at', today())
+                ->whereHas('order', function ($query) {
+                    $query->where('status', '!=', 'canceled');
+                });
         })->get()->sum(function ($product) {
             return $product->orderItems->sum(function ($orderItem) {
                 return $orderItem->quantity * $orderItem->price;
             });
         });
-
 
         $monthlyEarnings = Order::whereMonth('created_at', now()->month)
             ->where('status', '!=', 'canceled')
@@ -64,7 +68,7 @@ class HomeController extends Controller
 
         $productNames = $products->pluck('name');
         $totalSales = $products->pluck('total_sales');
-        $totalSalesSum = $totalSales->sum(); // Calculate the total sales sum
+        $totalSalesSum = $totalSales->sum();
 
         $lowStockProducts = Product::whereColumn('stock', '<', 'low_stock_threshold')->get();
         $lowStockIngredients = Ingredient::whereColumn('stock', '<', 'low_stock_threshold')->get();
@@ -79,12 +83,14 @@ class HomeController extends Controller
             $query->whereColumn('stock', '<', 'low_stock_threshold');
         })->get();
 
-
+        $nullUserOrders = Order::whereNull('user_id')->get();
+        $nullUserOrderSales = $nullUserOrders->sum('total_amount');
 
         return view('home', compact(
             'products', 'productNames', 'totalSales', 'totalSalesSum', 'lowStockProducts', 'lowStockIngredients',
             'todaysSales', 'monthlyEarnings', 'annualEarnings', 'pendingOrders',
-            'lowStockProductsCount', 'lowStockIngredientsCount', 'lowStockContainersCount', 'lowStockContainers'
+            'lowStockProductsCount', 'lowStockIngredientsCount', 'lowStockContainersCount', 'lowStockContainers',
+            'nullUserOrderSales'
         ));
     }
 }
