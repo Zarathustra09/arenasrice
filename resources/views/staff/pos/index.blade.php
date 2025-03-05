@@ -71,6 +71,7 @@
                     </div>
 
                     <!-- Product Grid -->
+                    <!-- Product Grid -->
                     <div class="card-body">
                         <div class="row row-cols-2 row-cols-sm-3 row-cols-md-4 row-cols-lg-5 g-2">
                             <!-- Product Items -->
@@ -79,7 +80,7 @@
                                     <div class="card h-100 product-card" style="border-color: #F0C29A; cursor: pointer;">
                                         <div class="card-body text-center p-2">
                                             <div class="mb-2 d-flex align-items-center justify-content-center" style="height: 70px; background-color: #FFDEB5; border-radius: 5px;">
-                                                <span style="color: #9B734F; font-weight: bold;">{{ $product->id }}</span>
+                                                <img src="{{ Storage::url($product->image) }}" alt="{{ $product->name }}" style="max-height: 70px; max-width: 100%;">
                                             </div>
                                             <h6 class="card-title mb-0" style="color: #9B734F;">{{ $product->name }}</h6>
                                             <p class="card-text" style="color: #B68D67;">&#8369;{{ number_format($product->price, 2) }}</p>

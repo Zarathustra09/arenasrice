@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Mail\LowStockNotification;
 use App\Mail\OrderDeliveredNotification;
+use App\Mail\OrderShippedNotification;
 use App\Models\Order;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
@@ -104,6 +105,9 @@ class AdminOrderController extends Controller
             Mail::to($order->user->email)->send(new OrderDeliveredNotification($order));
         }
 
+        if ($newStatus === 'shipped' && $order->status !== 'shipped') {
+            Mail::to($order->user->email)->send(new OrderShippedNotification($order));
+        }
         $order->status = $newStatus;
         $order->save();
 
