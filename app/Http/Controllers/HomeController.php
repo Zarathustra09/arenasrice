@@ -72,12 +72,13 @@ class HomeController extends Controller
 
         $lowStockProducts = Product::whereColumn('stock', '<', 'low_stock_threshold')->get();
         $lowStockIngredients = Ingredient::whereColumn('stock', '<', 'low_stock_threshold')->get();
-        $lowStockContainersCount = ProductContainer::whereColumn('quantity', '<', 'low_stock_threshold')->count();
+        $lowStockContainers = ProductContainer::whereColumn('quantity', '<', 'low_stock_threshold')->get();
 
 
         $lowStockProductsCount = Product::whereColumn('stock', '<', 'low_stock_threshold')->count();
         $lowStockIngredientsCount = Ingredient::whereColumn('stock', '<', 'low_stock_threshold')->count();
-        $lowStockContainers = ProductContainer::whereColumn('quantity', '<', 'low_stock_threshold')->get();
+        $lowStockContainersCount = ProductContainer::whereColumn('quantity', '<', 'low_stock_threshold')->count();
+
 
         $nullUserOrders = Order::whereNull('user_id')->get();
         $nullUserOrderSales = $nullUserOrders->sum('total_amount');
