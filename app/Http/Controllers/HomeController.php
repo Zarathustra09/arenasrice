@@ -18,7 +18,7 @@ class HomeController extends Controller
 
     public function index(Request $request)
     {
-        $query = Product::with(['orderItems' => function ($query) use ($request) {
+        $products = Product::with(['orderItems' => function ($query) use ($request) {
             if ($request->has('filter')) {
                 switch ($request->filter) {
                     case 'today':
@@ -38,14 +38,13 @@ class HomeController extends Controller
             $query->whereHas('order', function ($query) {
                 $query->where('status', '!=', 'canceled');
             });
-        }]);
-
-        $products = $query->get()->map(function ($product) {
-            $product->total_sales = $product->orderItems->sum(function ($orderItem) {
+        }])->get()->map(function ($product) {
+            $product->total_sales = $product->orderItems->where('order.status', '!=', 'canceled')->sum(function ($orderItem) {
                 return $orderItem->quantity * $orderItem->price;
             });
             return $product;
         })->sortByDesc('total_sales')->take(10);
+
 
         $todaysSales = Product::whereHas('orderItems', function ($query) {
             $query->whereDate('created_at', today())
@@ -53,7 +52,7 @@ class HomeController extends Controller
                     $query->where('status', '!=', 'canceled');
                 });
         })->get()->sum(function ($product) {
-            return $product->orderItems->sum(function ($orderItem) {
+            return $product->orderItems->where('order.status', '!=', 'canceled')->sum(function ($orderItem) {
                 return $orderItem->quantity * $orderItem->price;
             });
         });
@@ -64,6 +63,7 @@ class HomeController extends Controller
         $annualEarnings = Order::whereYear('created_at', now()->year)
             ->where('status', '!=', 'canceled')
             ->sum('total_amount');
+
         $pendingOrders = Order::where('status', 'pending')->count();
 
         $productNames = $products->pluck('name');
@@ -72,16 +72,12 @@ class HomeController extends Controller
 
         $lowStockProducts = Product::whereColumn('stock', '<', 'low_stock_threshold')->get();
         $lowStockIngredients = Ingredient::whereColumn('stock', '<', 'low_stock_threshold')->get();
+        $lowStockContainersCount = ProductContainer::whereColumn('quantity', '<', 'low_stock_threshold')->count();
+
 
         $lowStockProductsCount = Product::whereColumn('stock', '<', 'low_stock_threshold')->count();
         $lowStockIngredientsCount = Ingredient::whereColumn('stock', '<', 'low_stock_threshold')->count();
-        $lowStockContainersCount = ProductContainer::whereHas('products', function ($query) {
-            $query->whereColumn('stock', '<', 'low_stock_threshold');
-        })->count();
-
-        $lowStockContainers = ProductContainer::whereHas('products', function ($query) {
-            $query->whereColumn('stock', '<', 'low_stock_threshold');
-        })->get();
+        $lowStockContainers = ProductContainer::whereColumn('quantity', '<', 'low_stock_threshold')->get();
 
         $nullUserOrders = Order::whereNull('user_id')->get();
         $nullUserOrderSales = $nullUserOrders->sum('total_amount');
