@@ -85,6 +85,7 @@
                                             <h6 class="card-title mb-0" style="color: #9B734F;">{{ $product->name }}</h6>
                                             <p class="card-text" style="color: #B68D67;">&#8369;{{ number_format($product->price, 2) }}</p>
                                             <p class="card-text" style="color: #B68D67;">Quantity: {{ $product->stock }}</p>
+                                            <span class="d-none product-id">{{ $product->id }}</span> <!-- Hidden product ID -->
                                         </div>
                                     </div>
                                 </div>
@@ -203,18 +204,18 @@
 
                     const row = document.createElement('tr');
                     row.innerHTML = `
-                    <td>${item.name}</td>
-                    <td>
-                        <div class="input-group input-group-sm">
-                            <button class="btn btn-sm" style="background-color: #D3A780; color: white;" onclick="updateQuantity(${item.id}, -1)">-</button>
-                            <input type="text" class="form-control text-center" value="${item.quantity}" style="max-width: 40px;" readonly>
-                            <button class="btn btn-sm" style="background-color: #D3A780; color: white;" onclick="updateQuantity(${item.id}, 1)">+</button>
-                        </div>
-                    </td>
-                    <td>₱ ${item.price.toFixed(2)}</td>
-                    <td>₱ ${itemTotal.toFixed(2)}</td>
-                    <td><button class="btn btn-sm" style="background-color: #9B734F; color: white;" onclick="removeFromCart(${item.id})"><i class="bi bi-trash"></i></button></td>
-                `;
+                <td>${item.name}</td>
+                <td>
+                    <div class="input-group input-group-sm">
+                        <button class="btn btn-sm" style="background-color: #D3A780; color: white;" onclick="updateQuantity(${item.id}, -1)">-</button>
+                        <input type="text" class="form-control text-center" value="${item.quantity}" style="max-width: 40px;" readonly>
+                        <button class="btn btn-sm" style="background-color: #D3A780; color: white;" onclick="updateQuantity(${item.id}, 1)">+</button>
+                    </div>
+                </td>
+                <td>₱ ${item.price.toFixed(2)}</td>
+                <td>₱ ${itemTotal.toFixed(2)}</td>
+                <td><button class="btn btn-sm" style="background-color: #9B734F; color: white;" onclick="removeFromCart(${item.id})"><i class="bi bi-trash"></i></button></td>
+            `;
                     cartItemsContainer.appendChild(row);
                 });
 
@@ -261,7 +262,7 @@
             productCards.forEach(card => {
                 card.addEventListener('click', function() {
                     const product = {
-                        id: parseInt(card.querySelector('span').textContent),
+                        id: parseInt(card.querySelector('.product-id').textContent),
                         name: card.querySelector('.card-title').textContent,
                         price: parseFloat(card.querySelector('.card-text').textContent.replace('₱', ''))
                     };
