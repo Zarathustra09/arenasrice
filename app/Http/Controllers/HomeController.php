@@ -18,7 +18,7 @@ class HomeController extends Controller
 
     public function index(Request $request)
     {
-        $products = Product::with(['orderItems' => function ($query) use ($request) {
+        $query = Product::with(['orderItems' => function ($query) use ($request) {
             if ($request->has('filter')) {
                 switch ($request->filter) {
                     case 'today':
@@ -36,32 +36,27 @@ class HomeController extends Controller
                 }
             }
             $query->whereHas('order', function ($query) {
-                $query->where('status', '!=', 'canceled');
+                $query->where('status', 'delivered');
             });
-        }])->get()->map(function ($product) {
-            $product->total_sales = $product->orderItems->where('order.status', '!=', 'canceled')->sum(function ($orderItem) {
+        }]);
+
+        $products = $query->get()->map(function ($product) {
+            $product->total_sales = $product->orderItems->sum(function ($orderItem) {
                 return $orderItem->quantity * $orderItem->price;
             });
             return $product;
         })->sortByDesc('total_sales')->take(10);
 
-
-        $todaysSales = Product::whereHas('orderItems', function ($query) {
-            $query->whereDate('created_at', today())
-                ->whereHas('order', function ($query) {
-                    $query->where('status', '!=', 'canceled');
-                });
-        })->get()->sum(function ($product) {
-            return $product->orderItems->where('order.status', '!=', 'canceled')->sum(function ($orderItem) {
-                return $orderItem->quantity * $orderItem->price;
-            });
-        });
+        $todaysSales = Order::whereDate('created_at', today())
+            ->where('status', 'delivered')
+            ->sum('total_amount');
 
         $monthlyEarnings = Order::whereMonth('created_at', now()->month)
-            ->where('status', '!=', 'canceled')
+            ->where('status', 'delivered')
             ->sum('total_amount');
+
         $annualEarnings = Order::whereYear('created_at', now()->year)
-            ->where('status', '!=', 'canceled')
+            ->where('status', 'delivered')
             ->sum('total_amount');
 
         $pendingOrders = Order::where('status', 'pending')->count();
@@ -78,7 +73,6 @@ class HomeController extends Controller
         $lowStockProductsCount = Product::whereColumn('stock', '<', 'low_stock_threshold')->count();
         $lowStockIngredientsCount = Ingredient::whereColumn('stock', '<', 'low_stock_threshold')->count();
         $lowStockContainersCount = ProductContainer::whereColumn('quantity', '<', 'low_stock_threshold')->count();
-
 
         $nullUserOrders = Order::whereNull('user_id')->get();
         $nullUserOrderSales = $nullUserOrders->sum('total_amount');

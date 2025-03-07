@@ -18,11 +18,26 @@ class PosController extends Controller
         $products = Product::all();
         $orders = Order::whereNull('user_id')->get();
 
-        $monthlyEarnings = $orders->whereBetween('created_at', [now()->startOfMonth(), now()])->sum('total_amount');
-        $annualEarnings = $orders->whereBetween('created_at', [now()->startOfYear(), now()])->sum('total_amount');
-        $deliveredOrders = $orders->where('status', 'delivered')->count();
+        $todaysEarnings = Order::whereNull('user_id')
+            ->where('status', 'delivered')
+            ->whereDate('created_at', today())
+            ->sum('total_amount');
 
-        return view('staff.pos.index', compact('products', 'monthlyEarnings', 'annualEarnings', 'deliveredOrders'));
+        $monthlyEarnings = Order::whereNull('user_id')
+            ->where('status', 'delivered')
+            ->whereMonth('created_at', now()->month)
+            ->sum('total_amount');
+
+        $annualEarnings = Order::whereNull('user_id')
+            ->where('status', 'delivered')
+            ->whereYear('created_at', now()->year)
+            ->sum('total_amount');
+
+        $deliveredOrders = Order::whereNull('user_id')
+            ->where('status', 'delivered')
+            ->count();
+
+        return view('staff.pos.index', compact('products', 'monthlyEarnings', 'annualEarnings', 'deliveredOrders', 'todaysEarnings'));
     }
 
     public function getOrders()
