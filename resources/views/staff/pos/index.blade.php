@@ -1,7 +1,25 @@
 @extends(auth()->user()->role == 1 ? 'layouts.app' : 'layouts.staff.app')
 
 @section('content')
-    <div class="col-xl-4 col-md-6 mb-4">
+
+    <div class="col-xl-3 col-md-6 mb-4">
+        <div class="card border-left-primary shadow h-100 py-2">
+            <div class="card-body">
+                <div class="row no-gutters align-items-center">
+                    <div class="col mr-2">
+                        <div class="text-xs font-weight-bold text-primary text-uppercase mb-1">
+                            Earnings (Today)</div>
+                        <div class="h5 mb-0 font-weight-bold text-gray-800">₱{{ number_format($todaysEarnings, 2) }}</div>
+                    </div>
+                    <div class="col-auto">
+                        <i class="fas fa-calendar fa-2x text-gray-300"></i>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-xl-3 col-md-6 mb-4">
         <div class="card border-left-primary shadow h-100 py-2">
             <div class="card-body">
                 <div class="row no-gutters align-items-center">
@@ -19,7 +37,7 @@
     </div>
 
     <!-- Earnings (Annual) Card Example -->
-    <div class="col-xl-4 col-md-6 mb-4">
+    <div class="col-xl-3 col-md-6 mb-4">
         <div class="card border-left-success shadow h-100 py-2">
             <div class="card-body">
                 <div class="row no-gutters align-items-center">
@@ -37,7 +55,7 @@
     </div>
 
     <!-- Delivered Orders Card Example -->
-    <div class="col-xl-4 col-md-6 mb-4">
+    <div class="col-xl-3 col-md-6 mb-4">
         <div class="card border-left-warning shadow h-100 py-2">
             <div class="card-body">
                 <div class="row no-gutters align-items-center">
@@ -71,6 +89,7 @@
                     </div>
 
                     <!-- Product Grid -->
+                    <!-- Product Grid -->
                     <div class="card-body">
                         <div class="row row-cols-2 row-cols-sm-3 row-cols-md-4 row-cols-lg-5 g-2">
                             <!-- Product Items -->
@@ -79,11 +98,12 @@
                                     <div class="card h-100 product-card" style="border-color: #F0C29A; cursor: pointer;">
                                         <div class="card-body text-center p-2">
                                             <div class="mb-2 d-flex align-items-center justify-content-center" style="height: 70px; background-color: #FFDEB5; border-radius: 5px;">
-                                                <span style="color: #9B734F; font-weight: bold;">{{ $product->id }}</span>
+                                                <img src="{{ Storage::url($product->image) }}" alt="{{ $product->name }}" style="max-height: 70px; max-width: 100%;">
                                             </div>
                                             <h6 class="card-title mb-0" style="color: #9B734F;">{{ $product->name }}</h6>
                                             <p class="card-text" style="color: #B68D67;">&#8369;{{ number_format($product->price, 2) }}</p>
                                             <p class="card-text" style="color: #B68D67;">Quantity: {{ $product->stock }}</p>
+                                            <span class="d-none product-id">{{ $product->id }}</span> <!-- Hidden product ID -->
                                         </div>
                                     </div>
                                 </div>
@@ -202,18 +222,18 @@
 
                     const row = document.createElement('tr');
                     row.innerHTML = `
-                    <td>${item.name}</td>
-                    <td>
-                        <div class="input-group input-group-sm">
-                            <button class="btn btn-sm" style="background-color: #D3A780; color: white;" onclick="updateQuantity(${item.id}, -1)">-</button>
-                            <input type="text" class="form-control text-center" value="${item.quantity}" style="max-width: 40px;" readonly>
-                            <button class="btn btn-sm" style="background-color: #D3A780; color: white;" onclick="updateQuantity(${item.id}, 1)">+</button>
-                        </div>
-                    </td>
-                    <td>₱ ${item.price.toFixed(2)}</td>
-                    <td>₱ ${itemTotal.toFixed(2)}</td>
-                    <td><button class="btn btn-sm" style="background-color: #9B734F; color: white;" onclick="removeFromCart(${item.id})"><i class="bi bi-trash"></i></button></td>
-                `;
+                <td>${item.name}</td>
+                <td>
+                    <div class="input-group input-group-sm">
+                        <button class="btn btn-sm" style="background-color: #D3A780; color: white;" onclick="updateQuantity(${item.id}, -1)">-</button>
+                        <input type="text" class="form-control text-center" value="${item.quantity}" style="max-width: 40px;" readonly>
+                        <button class="btn btn-sm" style="background-color: #D3A780; color: white;" onclick="updateQuantity(${item.id}, 1)">+</button>
+                    </div>
+                </td>
+                <td>₱ ${item.price.toFixed(2)}</td>
+                <td>₱ ${itemTotal.toFixed(2)}</td>
+                <td><button class="btn btn-sm" style="background-color: #9B734F; color: white;" onclick="removeFromCart(${item.id})"><i class="bi bi-trash"></i></button></td>
+            `;
                     cartItemsContainer.appendChild(row);
                 });
 
@@ -260,7 +280,7 @@
             productCards.forEach(card => {
                 card.addEventListener('click', function() {
                     const product = {
-                        id: parseInt(card.querySelector('span').textContent),
+                        id: parseInt(card.querySelector('.product-id').textContent),
                         name: card.querySelector('.card-title').textContent,
                         price: parseFloat(card.querySelector('.card-text').textContent.replace('₱', ''))
                     };
