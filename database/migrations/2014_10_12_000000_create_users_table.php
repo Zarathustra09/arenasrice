@@ -15,6 +15,13 @@ return new class extends Migration
             $table->id();
             $table->string('name');
             $table->string('email')->unique();
+            $table->string('billing_name')->nullable();
+            $table->string('billing_address')->nullable();
+            $table->string('billing_city')->nullable();
+            $table->string('billing_state')->nullable();
+            $table->string('billing_zip')->nullable();
+            $table->string('billing_phone')->nullable();
+            $table->string('billing_email')->nullable();
             $table->string('profilepicture')->nullable();
             $table->timestamp('email_verified_at')->nullable();
             $table->string('password');

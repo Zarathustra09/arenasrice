@@ -73,14 +73,27 @@ class ProfileController extends Controller
             'email' => 'required|string|email|max:255|unique:users,email,' . Auth::id(),
             'password' => 'nullable|string|min:8|confirmed',
             'profilepicture' => 'nullable|image|mimes:jpeg,png,jpg,gif,svg|max:2048',
+            'billing_name' => 'nullable|string|max:255',
+            'billing_address' => 'nullable|string|max:255',
+            'billing_city' => 'nullable|string|max:255',
+            'billing_state' => 'nullable|string|max:255',
+            'billing_zip' => 'nullable|string|max:255',
+            'billing_phone' => 'nullable|string|max:255',
+            'billing_email' => 'nullable|string|email|max:255',
         ]);
 
         $user = Auth::user();
         $user->name = $request->name;
         $user->email = $request->email;
+        $user->billing_name = $request->billing_name;
+        $user->billing_address = $request->billing_address;
+        $user->billing_city = $request->billing_city;
+        $user->billing_state = $request->billing_state;
+        $user->billing_zip = $request->billing_zip;
+        $user->billing_phone = $request->billing_phone;
+        $user->billing_email = $request->billing_email;
 
         if ($request->filled('password')) {
-            // Log the former and new password
             Log::info('Former Password: ' . $user->password);
             Log::info('New Password: ' . $request->password);
 

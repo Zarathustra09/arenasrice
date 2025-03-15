@@ -132,37 +132,37 @@
 
 
     <div class="container-fluid px-4">
-        <div class="row mb-4">
-            <form method="GET" action="{{ route('home') }}" class="form-inline">
-                <select name="filter" class="form-control mr-2" onchange="toggleCustomDateFields(this.value)">
-                    <option value="">Select Filter</option>
-                    <option value="today">Today</option>
-                    <option value="week">This Week</option>
-                    <option value="month">This Month</option>
-                    <option value="custom">Custom</option>
-                </select>
-                <input type="date" name="start_date" id="start_date" class="form-control mr-2" style="display: none;">
-                <input type="date" name="end_date" id="end_date" class="form-control mr-2" style="display: none;">
-                <button type="submit" class="btn btn-primary">Filter</button>
-            </form>
-        </div>
-        <div class="row">
-            <div class="card shadow mb-4">
-                <div class="card-header py-3">
-                    <h6 class="m-0 font-weight-bold text-primary">Bar Chart</h6>
-                </div>
-                <div class="card-body">
-                    <div class="chart-bar">
-                        <canvas id="barchart"></canvas>
-                    </div>
-                    <hr>
-                    <div class="text-center">
-                        <h6 class="m-0 font-weight-bold text-primary">Total Sales: ₱{{ number_format($totalSalesSum, 2) }}</h6>
+{{--        <div class="row mb-4">--}}
+{{--            <form method="GET" action="{{ route('home') }}" class="form-inline">--}}
+{{--                <select name="filter" class="form-control mr-2" onchange="toggleCustomDateFields(this.value)">--}}
+{{--                    <option value="">Select Filter</option>--}}
+{{--                    <option value="today">Today</option>--}}
+{{--                    <option value="week">This Week</option>--}}
+{{--                    <option value="month">This Month</option>--}}
+{{--                    <option value="custom">Custom</option>--}}
+{{--                </select>--}}
+{{--                <input type="date" name="start_date" id="start_date" class="form-control mr-2" style="display: none;">--}}
+{{--                <input type="date" name="end_date" id="end_date" class="form-control mr-2" style="display: none;">--}}
+{{--                <button type="submit" class="btn btn-primary">Filter</button>--}}
+{{--            </form>--}}
+{{--        </div>--}}
+{{--        <div class="row">--}}
+{{--            <div class="card shadow mb-4">--}}
+{{--                <div class="card-header py-3">--}}
+{{--                    <h6 class="m-0 font-weight-bold text-primary">Bar Chart</h6>--}}
+{{--                </div>--}}
+{{--                <div class="card-body">--}}
+{{--                    <div class="chart-bar">--}}
+{{--                        <canvas id="barchart"></canvas>--}}
+{{--                    </div>--}}
+{{--                    <hr>--}}
+{{--                    <div class="text-center">--}}
+{{--                        <h6 class="m-0 font-weight-bold text-primary">Total Sales: ₱{{ number_format($totalSalesSum, 2) }}</h6>--}}
 {{--                        <h6 class="m-0 font-weight-bold text-primary">Today's Sale: ₱{{ number_format($todaysSales, 2) }}</h6>--}}
-                    </div>
-                </div>
-            </div>
-        </div>
+{{--                    </div>--}}
+{{--                </div>--}}
+{{--            </div>--}}
+{{--        </div>--}}
     </div>
 
 
