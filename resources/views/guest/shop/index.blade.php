@@ -35,6 +35,8 @@
                                             <div class="card-body">
                                                 <h5 class="card-title">{{ $product->name }}</h5>
                                                 <p class="card-text">{{ $product->description }}</p>
+
+                                                @if(auth()->check())
                                                 <p class="card-text">₱{{ $product->price }}</p>
                                                 <form class="add-to-cart-form" action="{{ route('cart.store') }}" method="POST">
                                                     @csrf
@@ -45,6 +47,8 @@
                                                         <i class="fa fa-shopping-bag me-2 text-primary"></i> Add to cart
                                                     </button>
                                                 </form>
+
+                                                @endif
                                             </div>
                                         </div>
                                     </div>

@@ -3,6 +3,7 @@
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
+use Illuminate\Support\Str;
 
 return new class extends Migration
 {
@@ -13,16 +14,10 @@ return new class extends Migration
     {
         Schema::create('orders', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('user_id')->nullable()->constrained()->onDelete('cascade'); // Link to users table
+            $table->foreignId('user_id')->nullable()->constrained()->onDelete('cascade');
+            $table->string('reference_id')->unique()->default('HYD-' . mt_rand(10000000, 99999999));
             $table->decimal('total_amount', 10, 2);
             $table->enum('status', ['pending', 'processing', 'shipped', 'delivered', 'canceled'])->default('pending');
-            $table->string('billing_name')->nullable();
-            $table->string('billing_address')->nullable();
-            $table->string('billing_city')->nullable();
-            $table->string('billing_state')->nullable();
-            $table->string('billing_zip')->nullable();
-            $table->string('billing_phone')->nullable();
-            $table->string('billing_email')->nullable();
             $table->timestamps();
         });
     }

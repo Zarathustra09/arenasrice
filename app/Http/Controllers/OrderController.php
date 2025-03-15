@@ -43,13 +43,13 @@ public function checkout(Request $request)
         'user_id' => $user->id,
         'total_amount' => $cartItems->sum(fn($item) => $item->product->price * $item->quantity),
         'status' => 'pending',
-        'billing_name' => $request->billing_name,
-        'billing_address' => $request->billing_address,
-        'billing_city' => $request->billing_city,
-        'billing_state' => $request->billing_state,
-        'billing_zip' => $request->billing_zip,
-        'billing_phone' => $request->billing_phone,
-        'billing_email' => $request->billing_email,
+//        'billing_name' => $request->billing_name,
+//        'billing_address' => $request->billing_address,
+//        'billing_city' => $request->billing_city,
+//        'billing_state' => $request->billing_state,
+//        'billing_zip' => $request->billing_zip,
+//        'billing_phone' => $request->billing_phone,
+//        'billing_email' => $request->billing_email,
     ]);
 
     foreach ($cartItems as $item) {

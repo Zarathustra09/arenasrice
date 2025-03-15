@@ -81,16 +81,20 @@
                                                     <h4>{{ $product->name }}</h4>
                                                     <p>{{ $product->description }}</p>
                                                     <div class="d-flex justify-content-between flex-lg-wrap">
-                                                        <p class="text-dark fs-5 fw-bold mb-0">₱{{ $product->price }}</p>
-                                                        <form class="add-to-cart-form" action="{{ route('cart.store') }}" method="POST">
-                                                            @csrf
-                                                            <input type="hidden" name="product_id" value="{{ $product->id }}">
-                                                            <input type="number" name="quantity" value="1" min="1" max="{{$product->stock}}" class="form-control mb-2" style="width: 60px;">
-                                                            <p class="mb-2">Stock: {{ $product->stock }}</p>
-                                                            <button type="submit" class="btn border border-secondary rounded-pill px-3 text-primary">
-                                                                <i class="fa fa-shopping-bag me-2 text-primary"></i> Add to cart
-                                                            </button>
-                                                        </form>
+
+                                                        @if(auth()->check())
+                                                            <p class="text-dark fs-5 fw-bold mb-0">₱{{ $product->price }}</p>
+                                                            <form class="add-to-cart-form" action="{{ route('cart.store') }}" method="POST">
+                                                                @csrf
+                                                                <input type="hidden" name="product_id" value="{{ $product->id }}">
+                                                                <input type="number" name="quantity" value="1" min="1" max="{{$product->stock}}" class="form-control mb-2" style="width: 60px;">
+                                                                <p class="mb-2">Stock: {{ $product->stock }}</p>
+                                                                <button type="submit" class="btn border border-secondary rounded-pill px-3 text-primary">
+                                                                    <i class="fa fa-shopping-bag me-2 text-primary"></i> Add to cart
+                                                                </button>
+                                                            </form>
+                                                        @endif
+
                                                     </div>
                                                 </div>
                                             </div>

@@ -33,7 +33,7 @@
                         <tbody>
                         @foreach($orders as $order)
                             <tr>
-                                <td>{{ $order->id }}</td>
+                                <td>{{ $order->reference_id }}</td>
                                 <td>
                                     @foreach($order->orderItems as $item)
                                         <img src="{{ Storage::url($item->product->image) }}" class="img-fluid me-5 rounded-circle" style="width: 80px; height: 80px;" alt="{{ $item->product->name }}">
@@ -57,7 +57,12 @@
                                 <td>₱{{ $order->total_amount }}</td>
                                 <td>{{ $order->status }}</td>
                                 <td>
+
+                                    @if($order->status === 'delivered')
                                     <a href="{{ route('admin.order.download', $order->id) }}" class="btn btn-success btn-sm">Print</a>
+                                    @else
+                                    <a href="{{ route('admin.order.download', $order->id) }}" class="btn btn-success btn-sm disabled">Print</a>
+                                    @endif
                                 </td>
                             </tr>
                         @endforeach

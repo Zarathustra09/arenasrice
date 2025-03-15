@@ -54,6 +54,43 @@
                             </div>
                         </div>
 
+                        <div class="row mb-4">
+                            <div class="col-md-4">
+                                <h6 class="fw-bold text-muted mb-2">Billing Name</h6>
+                                <p class="fs-5">{{ $user->billing_name }}</p>
+                            </div>
+                            <div class="col-md-4">
+                                <h6 class="fw-bold text-muted mb-2">Billing Address</h6>
+                                <p class="fs-5">{{ $user->billing_address }}</p>
+                            </div>
+                            <div class="col-md-4">
+                                <h6 class="fw-bold text-muted mb-2">Billing City</h6>
+                                <p class="fs-5">{{ $user->billing_city }}</p>
+                            </div>
+                        </div>
+
+                        <div class="row mb-4">
+                            <div class="col-md-4">
+                                <h6 class="fw-bold text-muted mb-2">Billing State</h6>
+                                <p class="fs-5">{{ $user->billing_state }}</p>
+                            </div>
+                            <div class="col-md-4">
+                                <h6 class="fw-bold text-muted mb-2">Billing Zip</h6>
+                                <p class="fs-5">{{ $user->billing_zip }}</p>
+                            </div>
+                            <div class="col-md-4">
+                                <h6 class="fw-bold text-muted mb-2">Billing Phone</h6>
+                                <p class="fs-5">{{ $user->billing_phone }}</p>
+                            </div>
+                        </div>
+
+                        <div class="row mb-4">
+                            <div class="col-md-4">
+                                <h6 class="fw-bold text-muted mb-2">Billing Email</h6>
+                                <p class="fs-5">{{ $user->billing_email }}</p>
+                            </div>
+                        </div>
+
                         <form id="profileUpdateForm" method="POST" action="{{ route('guest.profile.update') }}" enctype="multipart/form-data" style="display: none;">
                             @csrf
                             <div class="row mb-3">
@@ -90,6 +127,55 @@
                                     <input type="file" id="profilepicture" name="profilepicture" class="form-control">
                                 </div>
                             </div>
+
+                            <div class="row mb-3">
+                                <label for="billing_name" class="col-md-4 col-form-label">Billing Name</label>
+                                <div class="col-md-8">
+                                    <input type="text" id="billing_name" name="billing_name" class="form-control" value="{{ $user->billing_name }}">
+                                </div>
+                            </div>
+
+                            <div class="row mb-3">
+                                <label for="billing_address" class="col-md-4 col-form-label">Billing Address</label>
+                                <div class="col-md-8">
+                                    <input type="text" id="billing_address" name="billing_address" class="form-control" value="{{ $user->billing_address }}">
+                                </div>
+                            </div>
+
+                            <div class="row mb-3">
+                                <label for="billing_city" class="col-md-4 col-form-label">Billing City</label>
+                                <div class="col-md-8">
+                                    <input type="text" id="billing_city" name="billing_city" class="form-control" value="{{ $user->billing_city }}">
+                                </div>
+                            </div>
+
+                            <div class="row mb-3">
+                                <label for="billing_state" class="col-md-4 col-form-label">Billing State</label>
+                                <div class="col-md-8">
+                                    <input type="text" id="billing_state" name="billing_state" class="form-control" value="{{ $user->billing_state }}">
+                                </div>
+                            </div>
+
+                            <div class="row mb-3">
+                                <label for="billing_zip" class="col-md-4 col-form-label">Billing Zip</label>
+                                <div class="col-md-8">
+                                    <input type="text" id="billing_zip" name="billing_zip" class="form-control" value="{{ $user->billing_zip }}">
+                                </div>
+                            </div>
+
+                            <div class="row mb-3">
+                                <label for="billing_phone" class="col-md-4 col-form-label">Billing Phone</label>
+                                <div class="col-md-8">
+                                    <input type="text" id="billing_phone" name="billing_phone" class="form-control" value="{{ $user->billing_phone }}">
+                                </div>
+                            </div>
+
+                            <div class="row mb-3">
+                                <label for="billing_email" class="col-md-4 col-form-label">Billing Email</label>
+                                <div class="col-md-8">
+                                    <input type="email" id="billing_email" name="billing_email" class="form-control" value="{{ $user->billing_email }}">
+                                </div>
+                            </div>
                         </form>
                     </div>
                 </div>
@@ -110,6 +196,13 @@
                     const password = Swal.getPopup().querySelector('#password').value;
                     const password_confirmation = Swal.getPopup().querySelector('#password_confirmation').value;
                     const profilepicture = Swal.getPopup().querySelector('#profilepicture').files[0];
+                    const billing_name = Swal.getPopup().querySelector('#billing_name').value;
+                    const billing_address = Swal.getPopup().querySelector('#billing_address').value;
+                    const billing_city = Swal.getPopup().querySelector('#billing_city').value;
+                    const billing_state = Swal.getPopup().querySelector('#billing_state').value;
+                    const billing_zip = Swal.getPopup().querySelector('#billing_zip').value;
+                    const billing_phone = Swal.getPopup().querySelector('#billing_phone').value;
+                    const billing_email = Swal.getPopup().querySelector('#billing_email').value;
 
                     if (!name || !email) {
                         Swal.showValidationMessage(`Please enter name and email`);
@@ -119,7 +212,19 @@
                         Swal.showValidationMessage(`Passwords do not match`);
                     }
 
-                    return { name: name, email: email, password: password, profilepicture: profilepicture };
+                    return {
+                        name: name,
+                        email: email,
+                        password: password,
+                        profilepicture: profilepicture,
+                        billing_name: billing_name,
+                        billing_address: billing_address,
+                        billing_city: billing_city,
+                        billing_state: billing_state,
+                        billing_zip: billing_zip,
+                        billing_phone: billing_phone,
+                        billing_email: billing_email
+                    };
                 }
             }).then((result) => {
                 if (result.isConfirmed) {
@@ -134,6 +239,13 @@
                     if (result.value.profilepicture) {
                         formData.append('profilepicture', result.value.profilepicture);
                     }
+                    formData.append('billing_name', result.value.billing_name);
+                    formData.append('billing_address', result.value.billing_address);
+                    formData.append('billing_city', result.value.billing_city);
+                    formData.append('billing_state', result.value.billing_state);
+                    formData.append('billing_zip', result.value.billing_zip);
+                    formData.append('billing_phone', result.value.billing_phone);
+                    formData.append('billing_email', result.value.billing_email);
 
                     fetch('{{ route('guest.profile.update') }}', {
                         method: 'POST',
