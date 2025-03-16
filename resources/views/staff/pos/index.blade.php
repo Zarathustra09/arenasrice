@@ -202,7 +202,7 @@
                         }
                     }
                 ],
-                order: [[0, 'desc']] // Ensure the table is ordered by the first column (id) in descending order
+                order: [[0, 'desc']]
             });
         });
 
@@ -222,18 +222,18 @@
 
                     const row = document.createElement('tr');
                     row.innerHTML = `
-                <td>${item.name}</td>
-                <td>
-                    <div class="input-group input-group-sm">
-                        <button class="btn btn-sm" style="background-color: #D3A780; color: white;" onclick="updateQuantity(${item.id}, -1)">-</button>
-                        <input type="text" class="form-control text-center" value="${item.quantity}" style="max-width: 40px;" readonly>
-                        <button class="btn btn-sm" style="background-color: #D3A780; color: white;" onclick="updateQuantity(${item.id}, 1)">+</button>
-                    </div>
-                </td>
-                <td>₱ ${item.price.toFixed(2)}</td>
-                <td>₱ ${itemTotal.toFixed(2)}</td>
-                <td><button class="btn btn-sm" style="background-color: #9B734F; color: white;" onclick="removeFromCart(${item.id})"><i class="bi bi-trash"></i></button></td>
-            `;
+                    <td>${item.name}</td>
+                    <td>
+                        <div class="input-group input-group-sm">
+                            <button class="btn btn-sm" style="background-color: #D3A780; color: white;" onclick="updateQuantity(${item.id}, -1)">-</button>
+                            <input type="text" class="form-control text-center" value="${item.quantity}" style="max-width: 40px;" readonly>
+                            <button class="btn btn-sm" style="background-color: #D3A780; color: white;" onclick="updateQuantity(${item.id}, 1)">+</button>
+                        </div>
+                    </td>
+                    <td>₱ ${item.price.toFixed(2)}</td>
+                    <td>₱ ${itemTotal.toFixed(2)}</td>
+                    <td><button class="btn btn-sm" style="background-color: #9B734F; color: white;" onclick="removeFromCart(${item.id})"><i class="bi bi-trash"></i></button></td>
+                `;
                     cartItemsContainer.appendChild(row);
                 });
 
@@ -272,8 +272,8 @@
             }
 
             function clearOrder() {
-                cart.length = 0; // Clear the cart array
-                updateCart(); // Update the cart display
+                cart.length = 0;
+                updateCart();
             }
 
             const productCards = document.querySelectorAll('.product-card');
@@ -289,6 +289,37 @@
             });
 
             document.querySelector('.btn-clear-order').addEventListener('click', clearOrder);
+
+            $('#order-form').on('submit', function(event) {
+                event.preventDefault();
+                const formData = $(this).serialize();
+
+                $.ajax({
+                    url: $(this).attr('action'),
+                    type: 'POST',
+                    data: formData,
+                    success: function(response) {
+                        Swal.fire({
+                            title: 'Success',
+                            text: response.message,
+                            icon: 'success',
+                            showCancelButton: true,
+                            confirmButtonText: 'OK',
+                            cancelButtonText: 'Print',
+                            reverseButtons: true
+                        }).then((result) => {
+                            if (result.dismiss === Swal.DismissReason.cancel) {
+                                window.print();
+                            } else {
+                                location.reload();
+                            }
+                        });
+                    },
+                    error: function(response) {
+                        Swal.fire('Error', response.responseJSON.message, 'error');
+                    }
+                });
+            });
         });
     </script>
 @endpush
