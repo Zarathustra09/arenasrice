@@ -16,6 +16,8 @@ class Order extends Model
     ];
 
     // Relationship: An order belongs to a user
+
+
     public function user()
     {
         return $this->belongsTo(User::class);
@@ -32,4 +34,19 @@ class Order extends Model
     {
         return $this->hasMany(Payment::class);
     }
+
+    protected static function boot()
+    {
+        parent::boot();
+
+        static::creating(function ($order) {
+            do {
+                $referenceId = 'HYD-' . mt_rand(10000000, 99999999);
+            } while (Order::where('reference_id', $referenceId)->exists());
+
+            $order->reference_id = $referenceId;
+        });
+    }
+
+
 }
