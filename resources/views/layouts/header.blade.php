@@ -6,7 +6,7 @@
         <div class="sidebar-brand-icon">
         </div>
         <div class="sidebar-brand-text mx-3">
-            <img src="{{ asset('logoedited.png') }}" alt="Logo" height="200px" width="auto" class="mt-3">
+            <img src="{{ asset('logoedited.png') }}" alt="Logo" height="250px" width="auto" class="mt-3">
             <sup></sup>
         </div>
     </a>
@@ -19,10 +19,6 @@
     </li>
 
     <hr class="sidebar-divider">
-    <div class="sidebar-heading">
-        Point of Sale
-    </div>
-
     <li class="nav-item {{ Request::routeIs('pos.index') ? 'active' : '' }}">
         <a class="nav-link" href="{{route('pos.index')}}">
             <i class="fas fa-fw fa-money-bill"></i>
@@ -44,7 +40,7 @@
     <li class="nav-item">
         <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#collapseTwo"
            aria-expanded="true" aria-controls="collapseTwo">
-            <i class="fas fa-fw fa-cog"></i>
+            <i class="fas fa-fw fa-warehouse"></i>
             <span>Inventory Management</span>
         </a>
         <div id="collapseTwo" class="collapse" aria-labelledby="heading" data-parent="#accordionSidebar">
@@ -63,14 +59,11 @@
 
     <hr class="sidebar-divider">
 
-    <div class="sidebar-heading">
-        Sales Report
-    </div>
 
     <li class="nav-item">
         <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#collapseUtilities"
            aria-expanded="true" aria-controls="collapseUtilities">
-            <i class="fas fa-fw fa-cog"></i>
+            <i class="fas fa-fw fa-money-check-alt"></i>
             <span>Sales Report</span>
         </a>
         <div id="collapseUtilities" class="collapse" aria-labelledby="headingUtilities" data-parent="#accordionSidebar">

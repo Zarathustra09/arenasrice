@@ -38,6 +38,7 @@ class AdminOrderController extends Controller
 
         $data = $orders->map(function($order) {
             return [
+                'id' => $order->id,
                 'reference_id' => $order->reference_id,
                 'user' => $order->user ? $order->user->name : 'N/A',
                 'orderItems' => $order->orderItems->map(function($item) {

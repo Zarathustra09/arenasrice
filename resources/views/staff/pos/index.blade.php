@@ -156,30 +156,30 @@
         </div>
 
         <!-- Orders Table -->
-        <div class="row mt-4">
-            <div class="col-12">
-                <div class="card" style="border-color: #D3A780;">
-                    <div class="card-header" style="background-color: #B68D67; color: white;">
-                        <h5 class="mb-0">Orders</h5>
-                    </div>
-                    <div class="card-body">
-                        <table id="orders-table" class="table table-striped">
-                            <thead>
-                            <tr>
-                                <th>Order ID</th>
-                                <th>Total Amount</th>
-                                <th>Status</th>
-                                <th>Action</th>
-                            </tr>
-                            </thead>
-                            <tbody>
+{{--        <div class="row mt-4">--}}
+{{--            <div class="col-12">--}}
+{{--                <div class="card" style="border-color: #D3A780;">--}}
+{{--                    <div class="card-header" style="background-color: #B68D67; color: white;">--}}
+{{--                        <h5 class="mb-0">Orders</h5>--}}
+{{--                    </div>--}}
+{{--                    <div class="card-body">--}}
+{{--                        <table id="orders-table" class="table table-striped">--}}
+{{--                            <thead>--}}
+{{--                            <tr>--}}
+{{--                                <th>Order ID</th>--}}
+{{--                                <th>Total Amount</th>--}}
+{{--                                <th>Status</th>--}}
+{{--                                <th>Action</th>--}}
+{{--                            </tr>--}}
+{{--                            </thead>--}}
+{{--                            <tbody>--}}
 
-                            </tbody>
-                        </table>
-                    </div>
-                </div>
-            </div>
-        </div>
+{{--                            </tbody>--}}
+{{--                        </table>--}}
+{{--                    </div>--}}
+{{--                </div>--}}
+{{--            </div>--}}
+{{--        </div>--}}
     </div>
 @endsection
 
