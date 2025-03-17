@@ -38,7 +38,7 @@ class AdminOrderController extends Controller
 
         $data = $orders->map(function($order) {
             return [
-                'id' => $order->id,
+                'reference_id' => $order->reference_id,
                 'user' => $order->user ? $order->user->name : 'N/A',
                 'orderItems' => $order->orderItems->map(function($item) {
                     return [
@@ -115,5 +115,31 @@ class AdminOrderController extends Controller
         $order->save();
 
         return response()->json(['message' => 'Order status updated successfully!']);
+    }
+
+    public function updateOrderItems(Request $request, $id)
+    {
+        $order = Order::with('orderItems.product')->findOrFail($id);
+        $itemsToUpdate = $request->input('items');
+
+        foreach ($itemsToUpdate as $itemData) {
+            $item = $order->orderItems()->find($itemData['id']);
+            if ($item) {
+                $product = $item->product;
+                if ($product->stock < $itemData['quantity']) {
+                    return response()->json(['message' => "Not enough stock for product: {$product->name}"], 400);
+                }
+                $item->update(['quantity' => $itemData['quantity']]);
+            }
+        }
+
+        return response()->json(['message' => 'Order items updated successfully!']);
+    }
+
+    public function show($id)
+    {
+        $order = Order::with('orderItems.product')->findOrFail($id);
+        Log::info($order);
+        return response()->json(['orderItems' => $order->orderItems]);
     }
 }

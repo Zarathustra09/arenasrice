@@ -51,11 +51,15 @@ class HomeController extends Controller
             ->where('status', 'delivered')
             ->sum('total_amount');
 
-        $monthlyEarnings = Order::whereMonth('created_at', now()->month)
+        $weeklySales = Order::whereBetween('created_at', [now()->startOfWeek(), now()->endOfWeek()])
             ->where('status', 'delivered')
             ->sum('total_amount');
 
-        $annualEarnings = Order::whereYear('created_at', now()->year)
+        $monthlyEarnings = Order::whereBetween('created_at', [now()->startOfMonth(), now()])
+            ->where('status', 'delivered')
+            ->sum('total_amount');
+
+        $annualEarnings = Order::whereBetween('created_at', [now()->startOfYear(), now()])
             ->where('status', 'delivered')
             ->sum('total_amount');
 
@@ -81,7 +85,7 @@ class HomeController extends Controller
             'products', 'productNames', 'totalSales', 'totalSalesSum', 'lowStockProducts', 'lowStockIngredients',
             'todaysSales', 'monthlyEarnings', 'annualEarnings', 'pendingOrders',
             'lowStockProductsCount', 'lowStockIngredientsCount', 'lowStockContainersCount', 'lowStockContainers',
-            'nullUserOrderSales'
+            'nullUserOrderSales', 'weeklySales'
         ));
     }
 }

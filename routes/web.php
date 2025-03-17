@@ -60,7 +60,9 @@ Route::group(['middleware' => ['auth', 'role:1']], function () {
     //admin orders
     Route::get('admin/order/index', [AdminOrderController::class, 'index'])->name('admin.order.index');
     Route::get('admin/order/data', [AdminOrderController::class, 'dataTable'])->name('admin.order.data');
+    Route::get('admin/orders/{id}', [AdminOrderController::class, 'show'])->name('admin.orders.show');
     Route::put('admin/orders/{id}', [AdminOrderController::class, 'update'])->name('admin.orders.update');
+    Route::put('admin/orders/{id}/items', [AdminOrderController::class, 'updateOrderItems'])->name('admin.orders.updateItems');
 
     Route::get('/profile', [ProfileController::class, 'index'])->name('profile.index');
     Route::post('/profile', [ProfileController::class, 'update'])->name('profile.update');
