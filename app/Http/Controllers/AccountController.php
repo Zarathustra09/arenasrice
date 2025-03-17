@@ -19,15 +19,23 @@ class AccountController extends Controller
             'name' => 'required|string|max:155',
             'email' => 'required|string|email|max:155|unique:users',
             'password' => 'required|string|min:8|confirmed',
+            'billing_name' => 'required|string|max:255',
+            'billing_address' => 'required|string|max:255',
+            'billing_city' => 'required|string|max:255',
+            'billing_state' => 'required|string|max:255',
+            'billing_zip' => 'required|string|max:255',
+            'billing_phone' => 'required|string|max:255',
+            'billing_email' => 'required|string|email|max:255',
             'role' => 'required|integer|in:0,1,2',
         ]);
 
-        User::create([
-            'name' => $request->name,
-            'email' => $request->email,
-            'password' => bcrypt($request->password),
-            'role' => $request->role,
-        ]);
+        $data = $request->all();
+        if ($request->hasFile('profilepicture')) {
+            $data['profilepicture'] = $request->file('profilepicture')->store('profilepictures', 'public');
+        }
+        $data['password'] = bcrypt($request->password);
+
+        User::create($data);
 
         return response()->json(['message' => 'Admin account created successfully.']);
     }
@@ -40,15 +48,27 @@ class AccountController extends Controller
             'name' => 'required|string|max:155',
             'email' => 'required|string|email|max:155|unique:users,email,' . $id,
             'password' => 'nullable|string|min:8|confirmed',
+            'billing_name' => 'required|string|max:255',
+            'billing_address' => 'required|string|max:255',
+            'billing_city' => 'required|string|max:255',
+            'billing_state' => 'required|string|max:255',
+            'billing_zip' => 'required|string|max:255',
+            'billing_phone' => 'required|string|max:255',
+            'billing_email' => 'required|string|email|max:255',
             'role' => 'required|integer|in:0,1,2',
         ]);
 
-        $account->update([
-            'name' => $request->name,
-            'email' => $request->email,
-            'password' => $request->password ? bcrypt($request->password) : $account->password,
-            'role' => $request->role,
-        ]);
+        $data = $request->all();
+        if ($request->hasFile('profilepicture')) {
+            $data['profilepicture'] = $request->file('profilepicture')->store('profilepictures', 'public');
+        }
+        if ($request->password) {
+            $data['password'] = bcrypt($request->password);
+        } else {
+            unset($data['password']);
+        }
+
+        $account->update($data);
 
         return response()->json(['message' => 'Admin account updated successfully.']);
     }
@@ -59,15 +79,11 @@ class AccountController extends Controller
         return response()->json(['data' => $accounts]);
     }
 
-
-
     public function show($id)
     {
         $account = User::findOrFail($id);
         return response()->json(['data' => $account]);
     }
-
-
 
     public function destroy($id)
     {

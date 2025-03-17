@@ -14,6 +14,7 @@ use App\Http\Controllers\PosController;
 use App\Http\Controllers\ProductContainerController;
 use App\Http\Controllers\ProductController;
 use App\Http\Controllers\ProfileController;
+use App\Http\Controllers\SalesReportController;
 use App\Http\Controllers\ShopController;
 use App\Http\Middleware\RoleMiddleware;
 use Illuminate\Support\Facades\Auth;
@@ -87,6 +88,10 @@ Route::group(['middleware' => ['auth', 'role:1']], function () {
 
 
     Route::resource('product-containers', ProductContainerController::class);
+
+
+    Route::get('admin/sales-report/walk-in', [SalesReportController::class, 'indexWalkin'])->name('sales-report.walk-in');
+    Route::get('admin/sales-report/online-transaction', [SalesReportController::class, 'indexOnline'])->name('sales-report.online-transaction');
 
 
 });

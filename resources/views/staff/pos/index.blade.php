@@ -299,6 +299,14 @@
                     type: 'POST',
                     data: formData,
                     success: function(response) {
+                        console.log('Order response:', response); // Debugging
+
+                        if (!response.order_id) {
+                            console.error('Error: Order ID is missing in the response.');
+                            Swal.fire('Error', 'Something went wrong. Please try again.', 'error');
+                            return;
+                        }
+
                         Swal.fire({
                             title: 'Success',
                             text: response.message,
@@ -309,17 +317,21 @@
                             reverseButtons: true
                         }).then((result) => {
                             if (result.dismiss === Swal.DismissReason.cancel) {
-                                window.print();
+                                // Ensure order_id is correctly used
+                                window.location.href = `/admin/orders/${response.order_id}/download`;
                             } else {
                                 location.reload();
                             }
                         });
                     },
                     error: function(response) {
+                        console.error('AJAX error:', response);
                         Swal.fire('Error', response.responseJSON.message, 'error');
                     }
                 });
             });
+
+
         });
     </script>
 @endpush
