@@ -47,7 +47,7 @@
             <i class="fas fa-fw fa-cog"></i>
             <span>Inventory Management</span>
         </a>
-        <div id="collapseTwo" class="collapse" aria-labelledby="headingTwo" data-parent="#accordionSidebar">
+        <div id="collapseTwo" class="collapse" aria-labelledby="heading" data-parent="#accordionSidebar">
             <div class="bg-white py-2 collapse-inner rounded">
 {{--                <h6 class="collapse-header">Inventory Management</h6>--}}
                 <a class="collapse-item {{ Request::routeIs('products.index') ? 'active' : '' }}" href="{{ route('products.index') }}">Products</a>
@@ -59,32 +59,6 @@
     </li>
 
 
-{{--    <li class="nav-item {{ Request::routeIs('products.index') ? 'active' : '' }}">--}}
-{{--        <a class="nav-link" href="{{ route('products.index') }}">--}}
-{{--            <i class="fas fa-fw fa-box"></i>--}}
-{{--            <span>Products</span></a>--}}
-{{--    </li>--}}
-
-
-{{--    <li class="nav-item {{ Request::routeIs('categories.index') ? 'active' : '' }}">--}}
-{{--        <a class="nav-link" href="{{ route('categories.index') }}">--}}
-{{--            <i class="fas fa-fw fa-list"></i>--}}
-{{--            <span>Product Category</span></a>--}}
-{{--    </li>--}}
-{{--    <li class="nav-item {{ Request::routeIs('ingredients.index') ? 'active' : '' }}">--}}
-{{--        <a class="nav-link" href="{{ route('ingredients.index') }}">--}}
-{{--            <i class="fas fa-fw fa-carrot"></i>--}}
-{{--            <span>Ingredients</span></a>--}}
-{{--    </li>--}}
-
-{{--    <li class="nav-item {{ Request::routeIs('product-containers.index') ? 'active' : '' }}">--}}
-{{--        <a class="nav-link" href="{{ route('product-containers.index') }}">--}}
-{{--            <i class="fas fa-fw fa-archive"></i>--}}
-{{--            <span>Materials</span></a>--}}
-{{--    </li>--}}
-
-
-
 
 
     <hr class="sidebar-divider">
@@ -94,18 +68,16 @@
     </div>
 
     <li class="nav-item">
-        <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#collapseTwo"
-           aria-expanded="true" aria-controls="collapseTwo">
+        <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#collapseUtilities"
+           aria-expanded="true" aria-controls="collapseUtilities">
             <i class="fas fa-fw fa-cog"></i>
             <span>Sales Report</span>
         </a>
-        <div id="collapseTwo" class="collapse" aria-labelledby="headingTwo" data-parent="#accordionSidebar">
+        <div id="collapseUtilities" class="collapse" aria-labelledby="headingUtilities" data-parent="#accordionSidebar">
             <div class="bg-white py-2 collapse-inner rounded">
-{{--                <h6 class="collapse-header">Inventory Management</h6>--}}
-                <a class="collapse-item {{ Request::routeIs('products.index') ? 'active' : '' }}" href="{{ route('products.index') }}">Walk-in POS</a>
-                <a class="collapse-item {{ Request::routeIs('categories.index') ? 'active' : '' }}" href="{{ route('categories.index') }}">Online Transaction</a>
-{{--                <a class="collapse-item {{ Request::routeIs('ingredients.index') ? 'active' : '' }}" href="{{ route('ingredients.index') }}">Ingredients</a>--}}
-{{--                <a class="collapse-item {{ Request::routeIs('product-containers.index') ? 'active' : '' }}" href="{{ route('product-containers.index') }}">Containers</a>--}}
+                <a class="collapse-item {{ Request::routeIs('sales-report.walk-in') ? 'active' : '' }}" href="{{ route('sales-report.walk-in') }}">Walk-in POS</a>
+                <a class="collapse-item {{ Request::routeIs('sales-report.online-transaction') ? 'active' : '' }}" href="{{ route('sales-report.online-transaction') }}">Online Transaction</a>
+
             </div>
         </div>
     </li>
