@@ -5,7 +5,7 @@
     <div class="row">
         <!-- Earnings (Monthly) Card Example -->
 
-        <div class="col-xl-4 col-md-6 mb-4">
+        <div class="col-xl-6 col-md-6 mb-4">
             <div class="card border-left-primary shadow h-100 py-2">
                 <div class="card-body">
                     <div class="row no-gutters align-items-center">
@@ -22,7 +22,24 @@
             </div>
         </div>
 
-        <div class="col-xl-4 col-md-6 mb-4">
+        <div class="col-xl-6 col-md-6 mb-4">
+            <div class="card border-left-primary shadow h-100 py-2">
+                <div class="card-body">
+                    <div class="row no-gutters align-items-center">
+                        <div class="col mr-2">
+                            <div class="text-xs font-weight-bold text-primary text-uppercase mb-1">
+                                Earnings (Weekly)</div>
+                            <div class="h5 mb-0 font-weight-bold text-gray-800">₱{{ number_format($weeklySales, 2) }}</div>
+                        </div>
+                        <div class="col-auto">
+                            <i class="fas fa-calendar fa-2x text-gray-300"></i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-xl-6 col-md-6 mb-4">
             <div class="card border-left-primary shadow h-100 py-2">
                 <div class="card-body">
                     <div class="row no-gutters align-items-center">
@@ -40,7 +57,7 @@
         </div>
 
         <!-- Earnings (Annual) Card Example -->
-        <div class="col-xl-4 col-md-6 mb-4">
+        <div class="col-xl-6 col-md-6 mb-4">
             <div class="card border-left-success shadow h-100 py-2">
                 <div class="card-body">
                     <div class="row no-gutters align-items-center">
@@ -58,7 +75,7 @@
         </div>
 
         <!-- Pending Orders Card Example -->
-        <div class="col-xl-3 col-md-6 mb-4">
+        <div class="col-xl-6 col-md-6 mb-4">
             <div class="card border-left-warning shadow h-100 py-2">
                 <div class="card-body">
                     <div class="row no-gutters align-items-center">
@@ -76,7 +93,7 @@
         </div>
 
         <!-- Low Stock Products Card -->
-        <div class="col-xl-3 col-md-6 mb-4">
+        <div class="col-xl-6 col-md-6 mb-4">
             <div class="card border-left-warning shadow h-100 py-2" onclick="scrollToTable('lowStockProductsTable')">
                 <div class="card-body">
                     <div class="row no-gutters align-items-center">
@@ -94,7 +111,7 @@
         </div>
 
         <!-- Low Stock Ingredients Card -->
-        <div class="col-xl-3 col-md-6 mb-4">
+        <div class="col-xl-6 col-md-6 mb-4">
             <div class="card border-left-warning shadow h-100 py-2" onclick="scrollToTable('lowStockIngredientsTable')">
                 <div class="card-body">
                     <div class="row no-gutters align-items-center">
@@ -112,7 +129,7 @@
         </div>
 
         <!-- Low Stock Materials Card -->
-        <div class="col-xl-3 col-md-6 mb-4">
+        <div class="col-xl-6 col-md-6 mb-4">
             <div class="card border-left-warning shadow h-100 py-2" onclick="scrollToTable('lowStockContainersTable')">
                 <div class="card-body">
                     <div class="row no-gutters align-items-center">

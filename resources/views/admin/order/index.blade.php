@@ -36,16 +36,19 @@
                 serverSide: true,
                 ajax: '{{ route('admin.order.data') }}',
                 columns: [
-                    { data: 'id', name: 'id' },
+                    { data: 'reference_id', name: 'reference_id', title: 'Reference ID' },
                     { data: 'user', name: 'user' },
                     { data: 'orderItems', name: 'orderItems', render: function(data) {
-                            return data.map(item => item.product.name).join('<br>');
+                            let items = data.map(item => item.product.name).join('<br>');
+                            return items;
                         }},
                     { data: 'orderItems', name: 'orderItems', render: function(data) {
-                            return data.map(item => `₱${item.price}`).join('<br>');
+                            let prices = data.map(item => `₱${item.price}`).join('<br>');
+                            return prices;
                         }},
                     { data: 'orderItems', name: 'orderItems', render: function(data) {
-                            return data.map(item => item.quantity).join('<br>');
+                            let quantities = data.map(item => item.quantity).join('<br>');
+                            return quantities;
                         }},
                     { data: 'orderItems', name: 'orderItems', render: function(data) {
                             let total = data.reduce((sum, item) => sum + (item.price * item.quantity), 0);
@@ -58,10 +61,11 @@
                                 buttons += `<button class="btn btn-secondary btn-sm" disabled>Cancelled</button>`;
                             } else {
                                 buttons += `<a href="#" class="btn btn-primary btn-sm editOrderBtn" data-id="${data}">Edit</a>`;
+                                buttons += `<a href="#" class="btn btn-warning btn-sm editOrderItemsBtn" data-id="${data}">Edit Items</a>`;
                             }
                             buttons += `<a href="{{ url('admin/orders') }}/${data}/download" class="btn btn-success btn-sm ms-2">Print</a>`;
                             return buttons;
-                        }},
+                        }}
                 ],
                 order: [[0, 'desc']],
                 search: {
@@ -106,6 +110,63 @@
                                 Swal.fire('Error', response.responseJSON.message, 'error');
                             }
                         });
+                    }
+                });
+            });
+
+            $(document).on('click', '.editOrderItemsBtn', function() {
+                const orderId = $(this).data('id');
+                $.ajax({
+                    url: `{{ route('admin.orders.show', '') }}/${orderId}`,
+                    type: 'GET',
+                    success: function(response) {
+                        if (response.orderItems) {
+                            let orderItemsHtml = '';
+                            response.orderItems.forEach(item => {
+                                orderItemsHtml += `
+                            <div class="form-group">
+                                <label>${item.product.name}</label>
+                                <input type="number" class="form-control" name="quantity_${item.id}" value="${item.quantity}">
+                            </div>
+                        `;
+                            });
+
+                            Swal.fire({
+                                title: 'Edit Order Items',
+                                html: `
+                            <form id="editOrderItemsForm">
+                                ${orderItemsHtml}
+                            </form>
+                        `,
+                                showCancelButton: true,
+                                confirmButtonText: 'Save',
+                                preConfirm: () => {
+                                    const itemsToUpdate = [];
+                                    $('#editOrderItemsForm').find('input').each(function() {
+                                        const itemId = $(this).attr('name').split('_')[1];
+                                        const quantity = $(this).val();
+                                        itemsToUpdate.push({ id: itemId, quantity: quantity });
+                                    });
+                                    return $.ajax({
+                                        url: `{{ url('admin/orders') }}/${orderId}/items`,
+                                        type: 'PUT',
+                                        data: JSON.stringify({ items: itemsToUpdate }),
+                                        contentType: 'application/json',
+                                        headers: {
+                                            'X-CSRF-TOKEN': '{{ csrf_token() }}'
+                                        }
+                                    }).then(response => {
+                                        Swal.fire('Success', 'Order items updated successfully!', 'success');
+                                        $('#ordersTable').DataTable().ajax.reload();
+                                    }).catch(error => {
+                                        const errorMessage = JSON.parse(error.responseText).message;
+                                        Swal.showValidationMessage(`Error: ${errorMessage}`);
+                                    });
+                                }
+                            });
+                        } else {
+                            Swal.fire('Error', 'Failed to load order items.', 'error');
+                        }
                     }
                 });
             });
