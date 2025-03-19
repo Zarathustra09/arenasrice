@@ -11,6 +11,7 @@ class Order extends Model
 
     protected $fillable = [
         'user_id',
+        'reference_id',
         'total_amount',
         'total_paid', // Add this line
         'status',

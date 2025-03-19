@@ -70,7 +70,7 @@
                         <tbody>
                         @foreach($orders as $order)
                             <tr>
-                                <td>{{ $order->id }}</td>
+                                <td>{{ $order->reference_id }}</td>
                                 <td>{{ $order->total_amount }}</td>
                                 <td>{{ $order->status }}</td>
                                 <td>
