@@ -89,7 +89,9 @@
 @push('scripts')
     <script>
         $(document).ready(function() {
-            $('#orders-table').DataTable();
+            $('#orders-table').DataTable({
+                "order": [[0, "desc"]] // Order by the first column (Order ID) in descending order
+            });
         });
 
         function toggleCustomDateFields(value) {

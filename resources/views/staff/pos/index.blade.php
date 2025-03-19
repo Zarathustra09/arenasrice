@@ -146,6 +146,10 @@
                             <form id="order-form" action="{{ route('pos.saveOrder') }}" method="POST">
                                 @csrf
                                 <input type="hidden" name="cartItems" id="cart-items-input">
+                                <div class="mb-3">
+                                    <label for="total_paid" class="form-label">Total Paid</label>
+                                    <input type="number" class="form-control" id="total_paid" name="total_paid" step="0.01" required>
+                                </div>
                                 <button type="submit" class="btn btn-lg" style="background-color: #9B734F; color: white;">Pay Now</button>
                             </form>
                             <button class="btn btn-clear-order" style="background-color: #D3A780; color: white;">Clear Order</button>
@@ -156,30 +160,30 @@
         </div>
 
         <!-- Orders Table -->
-{{--        <div class="row mt-4">--}}
-{{--            <div class="col-12">--}}
-{{--                <div class="card" style="border-color: #D3A780;">--}}
-{{--                    <div class="card-header" style="background-color: #B68D67; color: white;">--}}
-{{--                        <h5 class="mb-0">Orders</h5>--}}
-{{--                    </div>--}}
-{{--                    <div class="card-body">--}}
-{{--                        <table id="orders-table" class="table table-striped">--}}
-{{--                            <thead>--}}
-{{--                            <tr>--}}
-{{--                                <th>Order ID</th>--}}
-{{--                                <th>Total Amount</th>--}}
-{{--                                <th>Status</th>--}}
-{{--                                <th>Action</th>--}}
-{{--                            </tr>--}}
-{{--                            </thead>--}}
-{{--                            <tbody>--}}
+        {{--        <div class="row mt-4'>--}}
+        {{--            <div class="col-12'>--}}
+        {{--                <div class="card" style="border-color: #D3A780;">--}}
+        {{--                    <div class="card-header" style="background-color: #B68D67; color: white;">--}}
+        {{--                        <h5 class="mb-0">Orders</h5>--}}
+        {{--                    </div>--}}
+        {{--                    <div class="card-body">--}}
+        {{--                        <table id="orders-table" class="table table-striped">--}}
+        {{--                            <thead>--}}
+        {{--                            <tr>--}}
+        {{--                                <th>Order ID</th>--}}
+        {{--                                <th>Total Amount</th>--}}
+        {{--                                <th>Status</th>--}}
+        {{--                                <th>Action</th>--}}
+        {{--                            </tr>--}}
+        {{--                            </thead>--}}
+        {{--                            <tbody>--}}
 
-{{--                            </tbody>--}}
-{{--                        </table>--}}
-{{--                    </div>--}}
-{{--                </div>--}}
-{{--            </div>--}}
-{{--        </div>--}}
+        {{--                            </tbody>--}}
+        {{--                        </table>--}}
+        {{--                    </div>--}}
+        {{--                </div>--}}
+        {{--            </div>--}}
+        {{--        </div>--}}
     </div>
 @endsection
 
@@ -293,6 +297,20 @@
             $('#order-form').on('submit', function(event) {
                 event.preventDefault();
                 const formData = $(this).serialize();
+                const totalPaid = parseFloat(document.getElementById('total_paid').value);
+                const totalAmount = parseFloat(cartTotalElement.textContent.replace('₱', '').replace(',', ''));
+
+                if (totalPaid < totalAmount) {
+                    Swal.fire({
+                        toast: true,
+                        position: 'top-right',
+                        icon: 'error',
+                        title: 'Total paid should not be less than the total amount.',
+                        showConfirmButton: false,
+                        timer: 3000
+                    });
+                    return;
+                }
 
                 $.ajax({
                     url: $(this).attr('action'),
@@ -303,35 +321,44 @@
 
                         if (!response.order_id) {
                             console.error('Error: Order ID is missing in the response.');
-                            Swal.fire('Error', 'Something went wrong. Please try again.', 'error');
+                            Swal.fire({
+                                toast: true,
+                                position: 'top-right',
+                                icon: 'error',
+                                title: 'Something went wrong. Please try again.',
+                                showConfirmButton: false,
+                                timer: 3000
+                            });
                             return;
                         }
 
-                        Swal.fire({
-                            title: 'Success',
-                            text: response.message,
-                            icon: 'success',
-                            showCancelButton: true,
-                            confirmButtonText: 'OK',
-                            cancelButtonText: 'Print',
-                            reverseButtons: true
-                        }).then((result) => {
-                            if (result.dismiss === Swal.DismissReason.cancel) {
-                                // Ensure order_id is correctly used
-                                window.location.href = `/admin/orders/${response.order_id}/download`;
-                            } else {
-                                location.reload();
-                            }
-                        });
+                        window.open(`/admin/orders/${response.order_id}/render`, '_blank');
+                        location.reload();
+
+                        setTimeout(() => {
+                            Swal.fire({
+                                toast: true,
+                                position: 'top-right',
+                                icon: 'success',
+                                title: 'Order placed successfully!',
+                                showConfirmButton: false,
+                                timer: 3000
+                            });
+                        }, 1000);
                     },
                     error: function(response) {
                         console.error('AJAX error:', response);
-                        Swal.fire('Error', response.responseJSON.message, 'error');
+                        Swal.fire({
+                            toast: true,
+                            position: 'top-right',
+                            icon: 'error',
+                            title: response.responseJSON.message,
+                            showConfirmButton: false,
+                            timer: 3000
+                        });
                     }
                 });
             });
-
-
         });
     </script>
 @endpush

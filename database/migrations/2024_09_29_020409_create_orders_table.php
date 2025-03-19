@@ -17,6 +17,7 @@ return new class extends Migration
             $table->foreignId('user_id')->nullable()->constrained()->onDelete('cascade');
             $table->string('reference_id')->unique()->default('HYD-' . mt_rand(10000000, 99999999));
             $table->decimal('total_amount', 10, 2);
+            $table->decimal('total_paid', 10, 2)->nullable(); // Add this line
             $table->enum('status', ['pending', 'processing', 'shipped', 'delivered', 'canceled'])->default('pending');
             $table->timestamps();
         });

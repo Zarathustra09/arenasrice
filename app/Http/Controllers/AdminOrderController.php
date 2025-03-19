@@ -42,12 +42,13 @@ class AdminOrderController extends Controller
                 'reference_id' => $order->reference_id,
                 'user' => $order->user ? $order->user->name : 'N/A',
                 'orderItems' => $order->orderItems->map(function($item) {
+                    $price = $item->quantity == 0 ? 0 : $item->price;
                     return [
                         'product' => [
                             'name' => $item->product->name,
                             'image' => Storage::url($item->product->image)
                         ],
-                        'price' => $item->price,
+                        'price' => $price,
                         'quantity' => $item->quantity
                     ];
                 }),
@@ -120,19 +121,46 @@ class AdminOrderController extends Controller
 
     public function updateOrderItems(Request $request, $id)
     {
+        Log::info('Starting updateOrderItems method', ['order_id' => $id]);
+
         $order = Order::with('orderItems.product')->findOrFail($id);
+        Log::info('Order retrieved', ['order' => $order]);
+
         $itemsToUpdate = $request->input('items');
+        Log::info('Items to update', ['items' => $itemsToUpdate]);
 
         foreach ($itemsToUpdate as $itemData) {
             $item = $order->orderItems()->find($itemData['id']);
             if ($item) {
                 $product = $item->product;
+                Log::info('Processing item', ['item_id' => $item->id, 'product' => $product]);
+
                 if ($product->stock < $itemData['quantity']) {
+                    Log::warning('Not enough stock for product', ['product' => $product->name, 'requested_quantity' => $itemData['quantity']]);
                     return response()->json(['message' => "Not enough stock for product: {$product->name}"], 400);
                 }
+
                 $item->update(['quantity' => $itemData['quantity']]);
+                Log::info('Item updated', ['item_id' => $item->id, 'new_quantity' => $itemData['quantity']]);
+            } else {
+                Log::warning('Item not found', ['item_id' => $itemData['id']]);
             }
         }
+
+        // Verify updated quantities and prices
+        $order->load('orderItems.product');
+        foreach ($order->orderItems as $item) {
+            Log::info('Updated item', ['item_id' => $item->id, 'quantity' => $item->quantity, 'price' => $item->price]);
+        }
+
+        // Recalculate the total amount
+        $totalAmount = $order->orderItems->sum(function($item) {
+            return $item->price * $item->quantity;
+        });
+        Log::info('Total amount recalculated', ['total_amount' => $totalAmount]);
+
+        $order->update(['total_amount' => $totalAmount]);
+        Log::info('Order total amount updated', ['order_id' => $order->id, 'total_amount' => $totalAmount]);
 
         return response()->json(['message' => 'Order items updated successfully!']);
     }

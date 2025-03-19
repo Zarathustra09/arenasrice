@@ -82,8 +82,9 @@
                                                     <p>{{ $product->description }}</p>
                                                     <div class="d-flex justify-content-between flex-lg-wrap">
 
-                                                        @if(auth()->check())
+
                                                             <p class="text-dark fs-5 fw-bold mb-0">₱{{ $product->price }}</p>
+                                                        @if(auth()->check())
                                                             <form class="add-to-cart-form" action="{{ route('cart.store') }}" method="POST">
                                                                 @csrf
                                                                 <input type="hidden" name="product_id" value="{{ $product->id }}">

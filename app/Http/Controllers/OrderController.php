@@ -76,9 +76,42 @@ public function checkout(Request $request)
     public function downloadOrder($id)
     {
         $order = Order::with('orderItems.product')->findOrFail($id);
+
+        // Filter out order items with a total cost of 0
+        $order->orderItems = $order->orderItems->filter(function($item) {
+            return $item->price * $item->quantity > 0;
+        });
+
         $customPaper = array(0, 0, 360, 720); // Adjusted height to fit the content
-        $pdf = Pdf::loadView('pdf.order', compact('order'))->setPaper($customPaper)->setOptions(['defaultFont' => 'DejaVu Sans']);
+        $pdf = Pdf::loadView('pdf.order', [
+            'order' => $order,
+            'total_paid' => $order->total_paid,
+            'change' => $order->total_paid ? $order->total_paid - $order->total_amount : null
+        ])
+            ->setPaper($customPaper)
+            ->setOptions(['defaultFont' => 'DejaVu Sans']);
         return $pdf->download('order_' . $order->id . '.pdf');
+    }
+
+
+    public function renderOrder($id)
+    {
+        $order = Order::with('orderItems.product')->findOrFail($id);
+
+        // Filter out order items with a total cost of 0
+        $order->orderItems = $order->orderItems->filter(function($item) {
+            return $item->price * $item->quantity > 0;
+        });
+
+        $customPaper = array(0, 0, 360, 720); // Adjusted height to fit the content
+        $pdf = Pdf::loadView('pdf.order', [
+            'order' => $order,
+            'total_paid' => $order->total_paid,
+            'change' => $order->total_paid ? $order->total_paid - $order->total_amount : null
+        ])
+            ->setPaper($customPaper)
+            ->setOptions(['defaultFont' => 'DejaVu Sans']);
+        return $pdf->stream('order_' . $order->id . '.pdf');
     }
 
 
@@ -88,6 +121,20 @@ public function checkout(Request $request)
             ->with('orderItems.product')
             ->orderBy('created_at', 'desc') // Order by created_at in descending order
             ->get();
+
+        // Update the order items to set the price to 0 if the quantity is zero and recalculate the total amount
+        $orders->each(function($order) {
+            $totalAmount = 0;
+            $order->orderItems->each(function($item) use (&$totalAmount) {
+                if ($item->quantity == 0) {
+                    $item->price = 0;
+                }
+                $totalAmount += $item->price * $item->quantity;
+            });
+            $order->total_amount = $totalAmount;
+            $order->save();
+        });
+
         return view('guest.order.list', compact('orders'));
     }
 }

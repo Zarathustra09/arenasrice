@@ -99,6 +99,7 @@ Route::group(['middleware' => ['auth', 'role:1']], function () {
 });
 
 Route::get('admin/orders/{id}/download', [OrderController::class, 'downloadOrder'])->name('admin.order.download');
+Route::get('admin/orders/{id}/render', [OrderController::class, 'renderOrder'])->name('admin.order.render');
 //products
 Route::post('guest/contact/send', [ContactController::class, 'send'])->name('contact.send');
 Route::get('guest/shop/index', [ShopController::class, 'index'])->name('shop.index');

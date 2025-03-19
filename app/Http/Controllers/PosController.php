@@ -47,72 +47,66 @@ class PosController extends Controller
     }
 
     public function saveOrder(Request $request)
-{
-    $user = Auth::user();
-    $cartItems = json_decode($request->input('cartItems'), true);
+    {
+        $user = Auth::user();
+        $cartItems = json_decode($request->input('cartItems'), true);
 
-    if (empty($cartItems)) {
-        return redirect()->back()->with('error', 'Your cart is empty.');
-    }
-
-    // Check if any cart item exceeds the available stock
-    foreach ($cartItems as $item) {
-        $product = Product::find($item['id']);
-        if ($item['quantity'] > $product->stock) {
-            return redirect()->back()->with('error', 'The quantity of ' . $product->name . ' exceeds the available stock.');
+        if (empty($cartItems)) {
+            return redirect()->back()->with('error', 'Your cart is empty.');
         }
-    }
 
-    $order = Order::create([
-        'user_id' => null,
-        'total_amount' => array_sum(array_map(fn($item) => $item['price'] * $item['quantity'], $cartItems)),
-        'status' => 'delivered',
-//        'billing_name' => $request->billing_name,
-//        'billing_address' => $request->billing_address,
-//        'billing_city' => $request->billing_city,
-//        'billing_state' => $request->billing_state,
-//        'billing_zip' => $request->billing_zip,
-//        'billing_phone' => $request->billing_phone,
-//        'billing_email' => $request->billing_email,
-    ]);
-
-    $lowStockContainers = [];
-    foreach ($cartItems as $item) {
-        OrderItem::create([
-            'order_id' => $order->id,
-            'product_id' => $item['id'],
-            'quantity' => $item['quantity'],
-            'price' => $item['price'],
-        ]);
-
-        // Decrease the product stock
-        $product = Product::find($item['id']);
-        $product->decrement('stock', $item['quantity']);
-
-        // Container validation
-        $container = $product->container;
-        if ($container) {
-            if ($container->quantity >= $item['quantity']) {
-                $container->decrement('quantity', $item['quantity']);
-                if ($container->quantity <= $container->low_stock_threshold) {
-                    $lowStockContainers[] = $container;
-                }
-            } else {
-                $lowStockContainers[] = $container;
+        // Check if any cart item exceeds the available stock
+        foreach ($cartItems as $item) {
+            $product = Product::find($item['id']);
+            if ($item['quantity'] > $product->stock) {
+                return redirect()->back()->with('error', 'The quantity of ' . $product->name . ' exceeds the available stock.');
             }
         }
+
+        $order = Order::create([
+            'user_id' => null,
+            'total_amount' => array_sum(array_map(fn($item) => $item['price'] * $item['quantity'], $cartItems)),
+            'total_paid' => $request->input('total_paid'), // Add this line
+            'status' => 'delivered',
+        ]);
+
+        $lowStockContainers = [];
+        foreach ($cartItems as $item) {
+            OrderItem::create([
+                'order_id' => $order->id,
+                'product_id' => $item['id'],
+                'quantity' => $item['quantity'],
+                'price' => $item['price'],
+            ]);
+
+            // Decrease the product stock
+            $product = Product::find($item['id']);
+            $product->decrement('stock', $item['quantity']);
+
+            // Container validation
+            $container = $product->container;
+            if ($container) {
+                if ($container->quantity >= $item['quantity']) {
+                    $container->decrement('quantity', $item['quantity']);
+                    if ($container->quantity <= $container->low_stock_threshold) {
+                        $lowStockContainers[] = $container;
+                    }
+                } else {
+                    $lowStockContainers[] = $container;
+                }
+            }
+        }
+
+        // Log low stock containers
+        if (!empty($lowStockContainers)) {
+            Log::info('Low stock containers: ' . json_encode($lowStockContainers));
+
+            // Send low stock notification email
+            Mail::to(env('KIM_MAIL'))->send(new LowStockNotification($lowStockContainers));
+        }
+
+        Log::info('Order placed successfully:', ['order_id' => $order->id]);
+
+        return response()->json(['message' => 'Order placed successfully!', 'order_id' => $order->id], 200);
     }
-
-    // Log low stock containers
-    if (!empty($lowStockContainers)) {
-        Log::info('Low stock containers: ' . json_encode($lowStockContainers));
-
-        // Send low stock notification email
-        Mail::to(env('KIM_MAIL'))->send(new LowStockNotification($lowStockContainers));
-    }
-
-    Log::info('Order placed successfully:', ['order_id' => $order->id]);
-
-    return response()->json(['message' => 'Order placed successfully!', 'order_id' => $order->id], 200);
-}
 }

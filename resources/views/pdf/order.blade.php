@@ -104,8 +104,14 @@
     @endforeach
     </tbody>
 </table>
-<div class="grand-total">
+<div class="grand-total" style="font-size: 12px;">
     <p>Grand Total: ₱{{ number_format($order->orderItems->sum(fn($item) => $item && $item->price ? $item->price * ($item->quantity ?? 1) : 0), 2) }}</p>
+    @if(isset($total_paid))
+        <p>Total Paid: ₱{{ number_format($total_paid, 2) }}</p>
+    @endif
+    @if(isset($change))
+        <p>Change: ₱{{ number_format($change, 2) }}</p>
+    @endif
 </div>
 </body>
 </html>
