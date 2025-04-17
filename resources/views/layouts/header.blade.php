@@ -6,7 +6,7 @@
         <div class="sidebar-brand-icon">
         </div>
         <div class="sidebar-brand-text mx-3">
-            <img src="{{ asset('logoedited.png') }}" alt="Logo" height="250px" width="auto" class="mt-3">
+            <img src="{{ asset('logofinal.png') }}" alt="Logo" height="220px" width="auto" class="mt-1">
             <sup></sup>
         </div>
     </a>

@@ -119,3 +119,41 @@
     </div>
     <!-- Cart Page End -->
 @endsection
+
+
+@push('scripts')
+    <script>
+        function updateQuantity(id, action) {
+            $.ajax({
+                url: `/guest/cart/${id}/${action}`,
+                type: 'PATCH',
+                data: {
+                    _token: '{{ csrf_token() }}'
+                },
+                success: function(response) {
+                    if (response.success) {
+                        let quantityInput = $(`#quantity-${id}`);
+                        let totalElement = $(`#total-${id}`);
+                        let price = parseFloat(totalElement.data('price'));
+
+                        if (response.quantity > 0) {
+                            quantityInput.val(response.quantity);
+                            totalElement.text(`₱${(price * response.quantity).toFixed(2)}`);
+                        } else {
+                            $(`#cart-item-${id}`).remove();
+                        }
+
+                        // Update subtotal and total
+                        let subtotal = 0;
+                        $('p[id^="total-"]').each(function() {
+                            subtotal += parseFloat($(this).text().replace('₱', ''));
+                        });
+
+                        $('#subtotal').text(`₱${subtotal.toFixed(2)}`);
+                        $('#total').text(`₱${subtotal.toFixed(2)}`);
+                    }
+                }
+            });
+        }
+    </script>
+@endpush
