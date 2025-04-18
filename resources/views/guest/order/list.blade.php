@@ -21,7 +21,7 @@
                         <thead>
                         <tr>
                             <th>Order ID</th>
-                            <th>Products</th>
+{{--                            <th>Products</th>--}}
                             <th>Item Name</th>
                             <th>Price</th>
                             <th>Quantity</th>
@@ -34,11 +34,11 @@
                         @foreach($orders as $order)
                             <tr>
                                 <td>{{ $order->reference_id }}</td>
-                                <td>
-                                    @foreach($order->orderItems as $item)
-                                        <img src="{{ Storage::url($item->product->image) }}" class="img-fluid me-5 rounded-circle" style="width: 80px; height: 80px;" alt="{{ $item->product->name }}">
-                                    @endforeach
-                                </td>
+{{--                                <td>--}}
+{{--                                    @foreach($order->orderItems as $item)--}}
+{{--                                        <img src="{{ Storage::url($item->product->image) }}" class="img-fluid me-5 rounded-circle" style="width: 80px; height: 80px;" alt="{{ $item->product->name }}">--}}
+{{--                                    @endforeach--}}
+{{--                                </td>--}}
                                 <td>
                                     @foreach($order->orderItems as $item)
                                         {{ $item->product->name }}<br>
